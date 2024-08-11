@@ -6,30 +6,27 @@ import Profile from '../Profile/Profile'; // Profil bileşenini import et
 const Game: React.FC = () => {
   const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
   const [totalCoins, setTotalCoins] = useState<number>(0); // Toplam coin state
-  const [userId, setUserId] = useState<number | null>(null); // Kullanıcı ID'si state
+
+  // Sabit kullanıcı ID'si
+  const userId = 1655796423;
 
   useEffect(() => {
-    // Kullanıcı ID'sini API'den alın veya belirleyin
-    // setUserId(...) burada kullanıcı ID'sini ayarlamak için kullanılır
+    // API'den kullanıcı verilerini al
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
+        const userData = response.data;
 
-    if (userId !== null) {
-      // API'den kullanıcı verilerini al
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
-          const userData = response.data;
+        // Kullanıcı adı ve toplam coinleri state'e ata
+        setUsername(userData.username || ''); // Varsayılan kullanıcı adı
+        setTotalCoins(userData.coin || 0); // Toplam coin
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-          // Kullanıcı adı ve toplam coinleri state'e ata
-          setUsername(userData.username || ''); // Varsayılan kullanıcı adı
-          setTotalCoins(userData.coin || 0); // Toplam coin
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
-
-      fetchUserData();
-    }
-  }, [userId]); // userId değiştiğinde useEffect çalışır
+    fetchUserData();
+  }, []); // Boş bağımlılık dizisi, component mount olduğunda çalışır
 
   const handleBossClick = () => {
     // Boss tıklama işlemleri burada yapılır
