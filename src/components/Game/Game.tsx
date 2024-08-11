@@ -1,48 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Boss from './Boss';
-import Profile from '../Profile/Profile'; // Profil bileşenini import et
+import Profile from '../Profile/Profile';
 
 const Game: React.FC = () => {
-  const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
+  const [username, setUsername] = useState<string | null>(null); // Kullanıcı adı state
   const [totalCoins, setTotalCoins] = useState<number>(0); // Total coins state
 
   useEffect(() => {
-    // Kullanıcı ID'si belirleyin. Örnek olarak sabit bir ID kullanıyoruz.
     const userId = 1; // Örnek kullanıcı ID'si
 
-    // API'den kullanıcı verilerini al
     const fetchUserData = async () => {
       try {
-        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId }); // API endpoint'ini güncelledik
+        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
         const userData = response.data;
 
-        // Eğer username varsa state'e ata
-        setUsername(userData.username || 'PlayerOne');
-        setTotalCoins(userData.coin || 0); // Toplam paraları state'e ata
+        // Eğer geçerli bir kullanıcı ID'si varsa ve kullanıcı verisi varsa state'e ata
+        if (userData && userData.id) {
+          setUsername(userData.username || null); // Kullanıcı adı varsa ata, yoksa null bırak
+          setTotalCoins(userData.coin || 0); // Toplam paraları state'e ata
+        } else {
+          // Eğer kullanıcı verisi yoksa veya ID geçerli değilse, hiçbir şey yapma
+          setUsername(null);
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setUsername('PlayerOne'); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı ata
+        // API hatası durumunda hiçbir şey yapma
+        setUsername(null);
       }
     };
 
     fetchUserData();
   }, []);
 
-  const handleBossClick = () => {
-    // Boss click işlemi yapılacaksa
-  };
-
-  const handleBossDeath = (coinAmount: number) => {
-    setTotalCoins((prevCoins) => prevCoins + coinAmount); // Add coins
-  };
+  // Kullanıcı adı alınmamışsa, bileşeni render etmeme
+  if (username === null) {
+    return null; // Bileşen hiç render edilmeyecek
+  }
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-4 font-orbitron">
-      {/* Boss component */}
-      <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
-
-      {/* Profil bileşeni */}
+      <Boss onClick={() => {}} onDeath={(coinAmount: number) => setTotalCoins((prevCoins) => prevCoins + coinAmount)} />
       <Profile username={username} totalCoins={totalCoins} />
     </div>
   );
