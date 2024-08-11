@@ -9,17 +9,17 @@ const Game: React.FC = () => {
   const [, setTotalCoins] = useState(0); // Total coins state
 
   useEffect(() => {
-    // API'den kullanıcı verilerini al
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint
+        const userId = 'some-user-id'; // Gerçek kullanıcı ID'sini burada kullanın
+        const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/userdata?id=${userId}`);
         const userData = response.data;
 
         // Kullanıcı adını state'e ata
-        setUsername(userData.username || "LRS"); // Varsayılan kullanıcı adı
+        setUsername(userData.username);
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setUsername("LRS"); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı
+        setUsername("PlayerOne"); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı
       }
     };
 
