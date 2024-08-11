@@ -1,51 +1,54 @@
-import React, { useState } from 'react';
-import { FaRocket } from 'react-icons/fa'; // Rocket icon
-import BoostPopup from './BoostPopup'; // BoostPopup component
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Boss from './Boss';
+import Profile from '../Profile/Profile'; // Profil bileşenini import et
 
-interface BoostProps {
-  boostLevel: number;
-}
+const generateRandomUsername = () => {
+  return `Gremlin${Math.floor(Math.random() * 10000)}`;
+};
 
-const Boost: React.FC<BoostProps> = ({ boostLevel }) => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
+const Game: React.FC = () => {
+  const [energy, setEnergy] = useState(100);
+  const [username, setUsername] = useState<string>(""); // Kullanıcı adı state
+  const [, setTotalCoins] = useState(0); // Total coins state
 
-  const handleBoostClick = () => {
-    setIsPopupVisible(true);
+  useEffect(() => {
+    // API'den kullanıcı verilerini al
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/userdata'); // API endpoint'inizi buraya koyun
+        const userData = response.data;
+
+        // Eğer username yoksa rastgele bir kullanıcı adı atayın
+        setUsername(userData.username || generateRandomUsername());
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setUsername(generateRandomUsername()); // API çağrısı sırasında hata olursa rastgele kullanıcı adı atayın
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleBossClick = () => {
+    if (energy > 0) {
+      setEnergy((prevEnergy) => Math.max(prevEnergy - 10, 0));
+    }
   };
 
-  const handlePopupClose = () => {
-    setIsPopupVisible(false);
+  const handleBossDeath = (coinAmount: number) => {
+    setTotalCoins((prevCoins) => prevCoins + coinAmount); // Add coins
   };
-
-  const upgradeOptions = [
-    { name: 'Daily Booster 1', description: 'Boosts daily performance.' },
-    { name: 'Daily Booster 2', description: 'Increases daily rewards.' },
-    { name: 'Daily Booster 3', description: 'Provides extra bonuses daily.' },
-    { name: 'Boost 1', description: 'Increases click damage.', cost: 200 },
-    { name: 'Boost 2', description: 'Improves click efficiency.', cost: 250 },
-    { name: 'Boost 3', description: 'Enhances overall performance.', cost: 300 },
-    { name: 'Boost 4', description: 'Provides temporary multipliers.', cost: 350 },
-    { name: 'Boost 5', description: 'Permanent damage increase.', cost: 400 },
-  ];
 
   return (
-    <div className="relative">
-      <div
-        className="fixed top-16 right-4 flex flex-col items-center space-y-1 cursor-pointer z-50 translate-y-0.5" // Slight downward shift
-        onClick={handleBoostClick}
-      >
-        <div className="flex items-center justify-center p-1 rounded-full">
-          <FaRocket size={20} className="text-yellow-500" />
-        </div>
-        <span className="text-xs font-medium text-white">Booster (Level: {boostLevel})</span>
-      </div>
-      <BoostPopup
-        isVisible={isPopupVisible}
-        onClose={handlePopupClose}
-        upgrades={upgradeOptions}
-      />
+    <div className="relative flex flex-col items-center justify-center min-h-screen p-4 font-orbitron">
+      {/* Boss component */}
+      <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
+
+      {/* Profil bileşeni */}
+      <Profile username={username} />
     </div>
   );
 };
 
-export default Boost;
+export default Game;

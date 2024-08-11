@@ -13,6 +13,7 @@
   "dependencies": {
     "@twa-dev/sdk": "^7.8.0",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.3",
     "gsap": "^3.12.5",
     "postcss": "^8.4.41",
     "react": "^18.3.1",
