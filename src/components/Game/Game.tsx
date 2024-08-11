@@ -5,17 +5,21 @@ import Profile from '../Profile/Profile'; // Profil bileşenini import et
 
 const Game: React.FC = () => {
   const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
-  const [, setTotalCoins] = useState<number>(0); // Total coins state
+  const [totalCoins, setTotalCoins] = useState<number>(0); // Total coins state
 
   useEffect(() => {
+    // Kullanıcı ID'si belirleyin. Örnek olarak sabit bir ID kullanıyoruz.
+    const userId = 1; // Örnek kullanıcı ID'si
+
     // API'den kullanıcı verilerini al
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint'ini güncelledik
+        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId }); // API endpoint'ini güncelledik
         const userData = response.data;
 
         // Eğer username varsa state'e ata
         setUsername(userData.username || 'PlayerOne');
+        setTotalCoins(userData.coin || 0); // Toplam paraları state'e ata
       } catch (error) {
         console.error('Error fetching user data:', error);
         setUsername('PlayerOne'); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı ata
@@ -39,7 +43,7 @@ const Game: React.FC = () => {
       <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
 
       {/* Profil bileşeni */}
-      <Profile username={username} />
+      <Profile username={username} totalCoins={totalCoins} />
     </div>
   );
 };

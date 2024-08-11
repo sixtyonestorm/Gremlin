@@ -4,9 +4,10 @@ import ProfilePopup from './ProfilePopup'; // Profil popup bileşenini içe akta
 
 interface ProfileProps {
   username: string;
+  totalCoins: number; // Total coins state'i ekle
 }
 
-const Profile: React.FC<ProfileProps> = ({ username }) => {
+const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false); // Popup görünürlük state'i
 
   const handleProfileClick = () => {
@@ -30,7 +31,7 @@ const Profile: React.FC<ProfileProps> = ({ username }) => {
       </div>
 
       {/* Profil popup'ını göstermek için state'e göre render et */}
-      {isPopupVisible && <ProfilePopup username={username} onClose={handlePopupClose} totalCoins={0} />}
+      {isPopupVisible && <ProfilePopup username={username} onClose={handlePopupClose} totalCoins={totalCoins} />}
     </div>
   );
 };
