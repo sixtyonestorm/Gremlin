@@ -5,9 +5,9 @@ import Profile from '../Profile/Profile'; // Profil bileşenini import et
 
 const Game: React.FC = () => {
   const [energy, setEnergy] = useState(100);
-  const [boostLevel, setBoostLevel] = useState(1); // Boost level state
-  const [username, setUsername] = useState("PlayerOne"); // Kullanıcı adı
-  const [totalCoins, setTotalCoins] = useState(0); // Total coins state
+  const [boostLevel] = useState(1); // Boost level state
+  const [username] = useState("PlayerOne"); // Kullanıcı adı
+  const [, setTotalCoins] = useState(0); // Total coins state
 
   const handleBossClick = () => {
     if (energy > 0) {
