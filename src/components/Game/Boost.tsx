@@ -1,54 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Boss from './Boss';
-import Profile from '../Profile/Profile'; // Profil bileşenini import et
+import React, { useState } from 'react';
+import BoostPopup from './BoostPopup'; // BoostPopup bileşenini import et
 
-const generateRandomUsername = () => {
-  return `Gremlin${Math.floor(Math.random() * 10000)}`;
-};
+interface Boost {
+  name: string;
+  description: string;
+  cost: number;
+}
 
-const Game: React.FC = () => {
-  const [energy, setEnergy] = useState(100);
-  const [username, setUsername] = useState<string>(""); // Kullanıcı adı state
-  const [, setTotalCoins] = useState(0); // Total coins state
+interface BoostProps {
+  boosts: Boost[]; // Boost seçeneklerini al
+}
 
-  useEffect(() => {
-    // API'den kullanıcı verilerini al
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/userdata'); // API endpoint'inizi buraya koyun
-        const userData = response.data;
+const Boost: React.FC<BoostProps> = ({ boosts }) => {
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-        // Eğer username yoksa rastgele bir kullanıcı adı atayın
-        setUsername(userData.username || generateRandomUsername());
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setUsername(generateRandomUsername()); // API çağrısı sırasında hata olursa rastgele kullanıcı adı atayın
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  const handleBossClick = () => {
-    if (energy > 0) {
-      setEnergy((prevEnergy) => Math.max(prevEnergy - 10, 0));
-    }
+  const handleBoostClick = () => {
+    setIsPopupVisible(true); // Boost butonuna tıklandığında popup'ı göster
   };
 
-  const handleBossDeath = (coinAmount: number) => {
-    setTotalCoins((prevCoins) => prevCoins + coinAmount); // Add coins
+  const handleClosePopup = () => {
+    setIsPopupVisible(false); // Popup'ı kapat
   };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-4 font-orbitron">
-      {/* Boss component */}
-      <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
+      {/* Boost Button */}
+      <button
+        onClick={handleBoostClick}
+        className="px-4 py-2 bg-gradient-to-r from-purple-400 to-purple-600 text-white font-semibold rounded-lg shadow-md hover:from-purple-500 hover:to-purple-700 transition duration-300 ease-in-out text-lg"
+      >
+        View Boosts
+      </button>
 
-      {/* Profil bileşeni */}
-      <Profile username={username} />
+      {/* Boost Popup */}
+      <BoostPopup isVisible={isPopupVisible} onClose={handleClosePopup} upgrades={boosts} />
     </div>
   );
 };
 
-export default Game;
+export default Boost;

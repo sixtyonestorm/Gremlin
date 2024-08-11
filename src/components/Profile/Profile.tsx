@@ -31,7 +31,9 @@ const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
       </div>
 
       {/* Profil popup'ını göstermek için state'e göre render et */}
-      {isPopupVisible && <ProfilePopup username={username} onClose={handlePopupClose} totalCoins={totalCoins} />}
+      {isPopupVisible && (
+        <ProfilePopup username={username} totalCoins={totalCoins} onClose={handlePopupClose} />
+      )}
     </div>
   );
 };
