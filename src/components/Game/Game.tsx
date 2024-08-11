@@ -19,8 +19,12 @@ const Game: React.FC = () => {
         const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint'ini güncelledik
         const userData = response.data;
 
-        // Eğer username yoksa rastgele bir kullanıcı adı atayın
-        setUsername(userData.username || generateRandomUsername());
+        // Eğer username varsa onu kullan, yoksa rastgele bir kullanıcı adı atayın
+        if (userData.username) {
+          setUsername(userData.username);
+        } else {
+          setUsername(generateRandomUsername());
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
         setUsername(generateRandomUsername()); // API çağrısı sırasında hata olursa rastgele kullanıcı adı atayın
