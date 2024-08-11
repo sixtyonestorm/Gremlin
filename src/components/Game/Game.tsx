@@ -3,10 +3,6 @@ import axios from 'axios';
 import Boss from './Boss';
 import Profile from '../Profile/Profile'; // Profil bileşenini import et
 
-const generateRandomUsername = () => {
-  return `Gremlin${Math.floor(Math.random() * 10000)}`;
-};
-
 const Game: React.FC = () => {
   const [energy, setEnergy] = useState(100);
   const [username, setUsername] = useState<string>(""); // Kullanıcı adı state
@@ -16,18 +12,14 @@ const Game: React.FC = () => {
     // API'den kullanıcı verilerini al
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint'ini güncelledik
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint
         const userData = response.data;
 
-        // Eğer username varsa onu kullan, yoksa rastgele bir kullanıcı adı atayın
-        if (userData.username) {
-          setUsername(userData.username);
-        } else {
-          setUsername(generateRandomUsername());
-        }
+        // Kullanıcı adını state'e ata
+        setUsername(userData.username || "LRS"); // Varsayılan kullanıcı adı
       } catch (error) {
         console.error('Error fetching user data:', error);
-        setUsername(generateRandomUsername()); // API çağrısı sırasında hata olursa rastgele kullanıcı adı atayın
+        setUsername("LRS"); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı
       }
     };
 
