@@ -6,6 +6,7 @@ interface BoostProps {
   boostLevel: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Boost: React.FC<BoostProps> = ({ boostLevel }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
