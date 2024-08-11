@@ -2,8 +2,8 @@ import React from 'react';
 
 interface ProfilePopupProps {
   username: string;
-  totalCoins: number; // Total coins state'i ekle
-  onClose: () => void;
+  totalCoins: number; // Toplam coin miktarı state'i
+  onClose: () => void; // Popup'ı kapatmak için fonksiyon
 }
 
 const ProfilePopup: React.FC<ProfilePopupProps> = ({ username, totalCoins, onClose }) => {
