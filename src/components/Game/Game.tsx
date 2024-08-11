@@ -1,32 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Boss from './Boss';
 import Profile from '../Profile/Profile'; // Profil bileşenini import et
-import axios from 'axios'; // HTTP istekleri için axios kullanacağız
 
 const Game: React.FC = () => {
-  const [energy, setEnergy] = useState(100);
-  const [username, setUsername] = useState<string | null>(null); // Dinamik username
-  const [, setTotalCoins] = useState(0); // Total coins state
-  const userId = 1; // Kullanıcı ID'sini burada ayarlayın. Dinamik olarak alabilirsiniz.
+  const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
+  const [, setTotalCoins] = useState<number>(0); // Total coins state
 
   useEffect(() => {
-    // Kullanıcı adı almak için API çağrısı
+    // API'den kullanıcı verilerini al
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`/userdata/${userId}`);
-        setUsername(response.data.username);
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/userdata'); // API endpoint'ini güncelledik
+        const userData = response.data;
+
+        // Eğer username varsa state'e ata
+        setUsername(userData.username || 'PlayerOne');
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setUsername('PlayerOne'); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı ata
       }
     };
 
     fetchUserData();
-  }, [userId]);
+  }, []);
 
   const handleBossClick = () => {
-    if (energy > 0) {
-      setEnergy((prevEnergy) => Math.max(prevEnergy - 10, 0));
-    }
+    // Boss click işlemi yapılacaksa
   };
 
   const handleBossDeath = (coinAmount: number) => {
@@ -38,10 +38,8 @@ const Game: React.FC = () => {
       {/* Boss component */}
       <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
 
-      {/* Boost component */}
-
       {/* Profil bileşeni */}
-      <Profile username={username || 'Loading...'} />
+      <Profile username={username} />
     </div>
   );
 };
