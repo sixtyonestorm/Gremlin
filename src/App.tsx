@@ -26,23 +26,6 @@ function App() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Simüle edilmiş kullanıcı verisi
-        const simulatedUserData: UserData = {
-          id: 1,
-          first_name: 'John',
-          last_name: 'Doe',
-          username: 'john_doe',
-          language_code: 'en',
-          is_premium: true,
-        };
-
-        // Kullanıcı verilerini simüle et
-        setTimeout(() => {
-          setUserData(simulatedUserData);
-          sendUserData(simulatedUserData); // sendUserData çağrısını aktif et
-          setLoading(false);
-        }, 5000); // 5 saniye bekle
-
         // WebApp verilerini al
         if (WebApp.initDataUnsafe) {
           const user = WebApp.initDataUnsafe?.user;
@@ -56,13 +39,19 @@ function App() {
               is_premium: user.is_premium || false,
             };
             setUserData(userData);
-            sendUserData(userData); // sendUserData çağrısını aktif et
+            await sendUserData(userData); // sendUserData çağrısını aktif et
+            setLoading(false);
+          } else {
+            console.error("Kullanıcı verisi mevcut değil.");
+            setLoading(false);
           }
         } else {
           console.error("WebApp.initDataUnsafe mevcut değil.");
+          setLoading(false);
         }
       } catch (error) {
         console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
+        setLoading(false);
       }
     };
 
