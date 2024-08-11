@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { FaRocket } from 'react-icons/fa'; // Rocket ikonunu içe aktar
-import BoostPopup from './BoostPopup'; // BoostPopup bileşenini içe aktar
+import { FaRocket } from 'react-icons/fa'; // Rocket icon
+import BoostPopup from './BoostPopup'; // BoostPopup component
 
 interface BoostProps {
   boostLevel: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Boost: React.FC<BoostProps> = ({ boostLevel }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -32,13 +31,13 @@ const Boost: React.FC<BoostProps> = ({ boostLevel }) => {
   return (
     <div className="relative">
       <div
-        className="fixed top-16 right-4 flex flex-col items-center space-y-1 cursor-pointer z-50 translate-y-0.5" // Yarım milim aşağı kaydırma
+        className="fixed top-16 right-4 flex flex-col items-center space-y-1 cursor-pointer z-50 translate-y-0.5" // Slight downward shift
         onClick={handleBoostClick}
       >
         <div className="flex items-center justify-center p-1 rounded-full">
           <FaRocket size={20} className="text-yellow-500" />
         </div>
-        <span className="text-xs font-medium text-white">Booster</span>
+        <span className="text-xs font-medium text-white">Booster (Level: {boostLevel})</span>
       </div>
       <BoostPopup
         isVisible={isPopupVisible}
