@@ -10,7 +10,7 @@ import Guild from './components/Guild/Guild';
 import Dungeon from './components/Dungeon/Dungeon';
 
 interface UserData {
-  id: string; // MongoDB ObjectId genellikle string olarak gelir
+  id: number;
   first_name: string;
   last_name?: string;
   username?: string;
@@ -18,7 +18,7 @@ interface UserData {
   is_premium?: boolean;
 }
 
-const sendUserData = async (userData: UserData) => {
+const sendUserData = async (userData: UserData) => { //test
   try {
     console.log('Sending user data:', userData);
     const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/userdata', {
@@ -30,7 +30,7 @@ const sendUserData = async (userData: UserData) => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorText = await response.text(); // Yanıt metnini oku
       throw new Error(`Failed to send user data: ${errorText}`);
     }
 
@@ -41,49 +41,6 @@ const sendUserData = async (userData: UserData) => {
   }
 };
 
-const updateLoginDate = async (userId: string) => {
-  try {
-    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to update login date: ${errorText}`);
-    }
-
-    const result = await response.json();
-    console.log('Login date updated successfully:', result);
-  } catch (error) {
-    console.error('Error updating login date:', error);
-  }
-};
-
-const updateLogoutDate = async (userId: string) => {
-  try {
-    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to update logout date: ${errorText}`);
-    }
-
-    const result = await response.json();
-    console.log('Logout date updated successfully:', result);
-  } catch (error) {
-    console.error('Error updating logout date:', error);
-  }
-};
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -93,10 +50,11 @@ function App() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // WebApp SDK'dan kullanıcı verilerini al
         const user = WebApp.initDataUnsafe?.user;
         if (user) {
           const userData: UserData = {
-            id: user.id.toString(), // ID'yi string'e dönüştür
+            id: user.id,
             first_name: user.first_name,
             last_name: user.last_name || '',
             username: user.username || '',
@@ -105,7 +63,6 @@ function App() {
           };
           setUserData(userData);
           await sendUserData(userData); // API'ye kullanıcı verisini gönder
-          await updateLoginDate(user.id.toString()); // Giriş tarihini güncelle
         } else {
           console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
         }
@@ -119,14 +76,6 @@ function App() {
     fetchUserData();
     console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
   }, []);
-
-  useEffect(() => {
-    return () => {
-      if (userData) {
-        updateLogoutDate(userData.id); // Çıkış tarihini güncelle
-      }
-    };
-  }, [userData]);
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -163,7 +112,7 @@ function App() {
         </main>
       ) : (
         <main className="flex items-center justify-center h-screen p-4">
-          <p>Kullanıcı verileri alınamadı.</p>
+          <div>Kullanıcı verisi mevcut değil.</div>
         </main>
       )}
     </>
