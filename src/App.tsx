@@ -27,22 +27,23 @@ function App() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        // Telegram'dan veri alın
         const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/userdata');
-        
         if (!response.ok) {
           throw new Error('Ağ yanıtı başarısız oldu');
         }
-
         const data: UserData = await response.json();
+        
+        // Veriyi veritabanına gönder
         await sendUserData(data);
-        // Gecikme ekle
-        setTimeout(() => {
-          setUserData(data);
-          setLoading(false);
-        }, 15000); // 10-15 saniye gecikme
+        
+        // Uygulamayı yüklemeyi başlat
+        setUserData(data);
       } catch (error) {
         console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
-        setLoading(false); // Hata durumunda da yükleme durumunu kaldır
+      } finally {
+        // Verilerin alınıp yüklenmesi tamamlandığında yükleme durumunu kaldır
+        setLoading(false);
       }
     };
 
