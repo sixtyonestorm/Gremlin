@@ -4,7 +4,7 @@ import ProfilePopup from './ProfilePopup'; // Profil popup bileşenini içe akta
 
 interface ProfileProps {
   username: string;
-  totalCoins: number; // Total coins state'i ekle
+  totalCoins: number; // Coin state'i
 }
 
 const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {

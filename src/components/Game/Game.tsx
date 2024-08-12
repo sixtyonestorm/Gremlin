@@ -71,7 +71,9 @@ const Game: React.FC = () => {
       <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
 
       {/* Profil bileşeni */}
-      <Profile username={username} totalCoins={coin} />
+      {userId !== null && (
+        <Profile username={username} totalCoins={coin} />
+      )}
     </div>
   );
 };
