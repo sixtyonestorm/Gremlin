@@ -18,10 +18,12 @@ interface UserData {
   is_premium?: boolean;
 }
 
-const sendUserData = async (userData: UserData) => { //test
+const API_URL = 'https://greserver-b4a1eced30d9.herokuapp.com/user';
+
+const sendUserData = async (userData: UserData) => {
   try {
     console.log('Sending user data:', userData);
-    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/userdata', {
+    const response = await fetch(`${API_URL}/userdata`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,6 +43,49 @@ const sendUserData = async (userData: UserData) => { //test
   }
 };
 
+const updateUserLogin = async (userId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text(); // Yanıt metnini oku
+      throw new Error(`Failed to update login date: ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log('Login date updated successfully:', result);
+  } catch (error) {
+    console.error('Error updating login date:', error);
+  }
+};
+
+const updateUserLogout = async (userId: number) => {
+  try {
+    const response = await fetch(`${API_URL}/logout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text(); // Yanıt metnini oku
+      throw new Error(`Failed to update logout date: ${errorText}`);
+    }
+
+    const result = await response.json();
+    console.log('Logout date updated successfully:', result);
+  } catch (error) {
+    console.error('Error updating logout date:', error);
+  }
+};
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -63,6 +108,7 @@ function App() {
           };
           setUserData(userData);
           await sendUserData(userData); // API'ye kullanıcı verisini gönder
+          await updateUserLogin(user.id); // Kullanıcının giriş tarihini güncelle
         } else {
           console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
         }
@@ -75,7 +121,14 @@ function App() {
 
     fetchUserData();
     console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
-  }, []);
+
+    // Temizleme işlevi: Komponent kaldırılırken çıkış tarihini güncelle
+    return () => {
+      if (userData?.id) {
+        updateUserLogout(userData.id);
+      }
+    };
+  }, [userData]);
 
   const renderActiveComponent = () => {
     switch (activeComponent) {
@@ -107,7 +160,6 @@ function App() {
           <div className="w-full max-w-4xl p-4">
             {renderActiveComponent()}
           </div>
-
           <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
         </main>
       ) : (
