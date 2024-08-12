@@ -10,7 +10,7 @@ import Guild from './components/Guild/Guild';
 import Dungeon from './components/Dungeon/Dungeon';
 
 interface UserData {
-  id: number;
+  id: string; // MongoDB'de ID genellikle string olarak saklanır
   first_name: string;
   last_name?: string;
   username?: string;
@@ -41,7 +41,6 @@ const sendUserData = async (userData: UserData) => {
   }
 };
 
-
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,7 +53,7 @@ function App() {
         const user = WebApp.initDataUnsafe?.user;
         if (user) {
           const userData: UserData = {
-            id: user.id,
+            id: user.id.toString(), // ID'yi string'e çeviriyoruz
             first_name: user.first_name,
             last_name: user.last_name || '',
             username: user.username || '',
@@ -107,7 +106,6 @@ function App() {
           <div className="w-full max-w-4xl p-4">
             {renderActiveComponent()}
           </div>
-
           <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
         </main>
       ) : (
