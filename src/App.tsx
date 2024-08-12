@@ -20,6 +20,7 @@ interface UserData {
 
 const sendUserData = async (userData: UserData) => {
   try {
+    console.log('Sending user data:', userData);
     const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/userdata', {
       method: 'POST',
       headers: {
@@ -29,7 +30,8 @@ const sendUserData = async (userData: UserData) => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to send user data');
+      const errorText = await response.text(); // Yanıt metnini oku
+      throw new Error(`Failed to send user data: ${errorText}`);
     }
 
     const result = await response.json();
@@ -38,6 +40,7 @@ const sendUserData = async (userData: UserData) => {
     console.error('Error sending user data:', error);
   }
 };
+
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
