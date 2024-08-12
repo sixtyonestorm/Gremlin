@@ -6,15 +6,15 @@ import Profile from '../Profile/Profile'; // Profil bileşenini import et
 const Game: React.FC = () => {
   const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
   const [coin, setCoin] = useState<number>(0); // Coin state
-  const [userId, setUserId] = useState<number | null>(null); // Dinamik kullanıcı ID'si
+  const [userId, setUserId] = useState<number | null>(null); // Kullanıcı ID state'i
+  const [loading, setLoading] = useState<boolean>(true); // Yüklenme durumu
 
   useEffect(() => {
-    // Kullanıcı ID'sini almak için API çağrısı
+    // Kullanıcı ID'sini API'den al
     const fetchUserId = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/getuserid'); // Bu endpoint'ten kullanıcı ID'sini alıyoruz
-        const userId = response.data.userId;
-        setUserId(userId); // Alınan kullanıcı ID'sini state'e ata
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/getUserId');
+        setUserId(response.data.userId);
       } catch (error) {
         console.error('Error fetching user ID:', error);
       }
@@ -24,39 +24,38 @@ const Game: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // User ID değiştiğinde kullanıcı verilerini al
-    const fetchUserData = async () => {
-      if (userId === null) return; // Eğer userId yoksa, işleme devam etme
+    if (userId !== null) {
+      // Kullanıcı verilerini API'den al
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
+          const userData = response.data;
 
-      try {
-        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
-        const userData = response.data;
+          setUsername(userData.username || 'Unknown');
+          setCoin(userData.coin || 0);
+          setLoading(false); // Veriler alındı, yüklenmeyi tamamla
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setUsername('Unknown');
+          setLoading(false); // Hata durumunda da yüklenmeyi tamamla
+        }
+      };
 
-        // Eğer username varsa state'e ata
-        setUsername(userData.username || 'Unknown');
-        setCoin(userData.coin || 0); // Toplam coinleri state'e ata
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setUsername('Unknown'); // API çağrısı sırasında hata olursa varsayılan kullanıcı adı ata
-      }
-    };
-
-    fetchUserData();
-  }, [userId]); // userId değiştiğinde kullanıcı verilerini güncelle
+      fetchUserData();
+    }
+  }, [userId]);
 
   const handleBossClick = () => {
     // Boss click işlemi yapılacaksa
   };
 
   const handleBossDeath = (coinAmount: number) => {
-    setCoin((prevCoin) => prevCoin + coinAmount); // Coin miktarını ekle
+    setCoin((prevCoin) => prevCoin + coinAmount);
 
     // Coin güncellemesini backend'e gönder
     const updateCoin = async () => {
       try {
-        if (userId !== null) {
-          await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
-        }
+        await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
       } catch (error) {
         console.error('Error updating coin:', error);
       }
@@ -70,10 +69,10 @@ const Game: React.FC = () => {
       {/* Boss component */}
       <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
 
+      {/* Boost component */}
+
       {/* Profil bileşeni */}
-      {userId !== null && (
-        <Profile username={username} totalCoins={coin} />
-      )}
+      {!loading && <Profile username={username} totalCoins={coin} />}
     </div>
   );
 };

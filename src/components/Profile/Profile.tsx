@@ -19,16 +19,14 @@ const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="absolute top-4 left-4 flex flex-col items-center space-y-1 cursor-pointer z-50">
       <div
-        className="fixed bottom-4 right-4 flex flex-col items-center space-y-1 cursor-pointer z-50"
+        className="flex items-center justify-center p-1 rounded-full bg-gray-800"
         onClick={handleProfileClick} // Tıklama olayını tetikler
       >
-        <div className="flex items-center justify-center p-1 rounded-full bg-gray-800">
-          <FaUser size={20} className="text-white" />
-        </div>
-        <span className="text-xs font-medium text-white">{username}</span>
+        <FaUser size={20} className="text-white" />
       </div>
+      <span className="text-xs font-medium text-white">{username}</span>
 
       {/* Profil popup'ını göstermek için state'e göre render et */}
       {isPopupVisible && (
