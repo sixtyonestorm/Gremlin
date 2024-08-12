@@ -6,11 +6,28 @@ import Profile from '../Profile/Profile'; // Profil bileşenini import et
 const Game: React.FC = () => {
   const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
   const [coin, setCoin] = useState<number>(0); // Coin state
-  const userId = 1655796423; // Sabit kullanıcı ID'si
+  const [userId, setUserId] = useState<number | null>(null); // Dinamik kullanıcı ID'si
 
   useEffect(() => {
-    // API'den kullanıcı verilerini al
+    // Kullanıcı ID'sini almak için API çağrısı
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/getuserid'); // Bu endpoint'ten kullanıcı ID'sini alıyoruz
+        const userId = response.data.userId;
+        setUserId(userId); // Alınan kullanıcı ID'sini state'e ata
+      } catch (error) {
+        console.error('Error fetching user ID:', error);
+      }
+    };
+
+    fetchUserId();
+  }, []);
+
+  useEffect(() => {
+    // User ID değiştiğinde kullanıcı verilerini al
     const fetchUserData = async () => {
+      if (userId === null) return; // Eğer userId yoksa, işleme devam etme
+
       try {
         const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
         const userData = response.data;
@@ -25,7 +42,7 @@ const Game: React.FC = () => {
     };
 
     fetchUserData();
-  }, [userId]);
+  }, [userId]); // userId değiştiğinde kullanıcı verilerini güncelle
 
   const handleBossClick = () => {
     // Boss click işlemi yapılacaksa
@@ -37,7 +54,9 @@ const Game: React.FC = () => {
     // Coin güncellemesini backend'e gönder
     const updateCoin = async () => {
       try {
-        await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
+        if (userId !== null) {
+          await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
+        }
       } catch (error) {
         console.error('Error updating coin:', error);
       }
