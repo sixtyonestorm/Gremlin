@@ -4,7 +4,7 @@ import ProfilePopup from './ProfilePopup'; // Profil popup bileşenini içe akta
 
 interface ProfileProps {
   username: string;
-  totalCoins: number; // Coin state'i
+  totalCoins: number; // Total coins state'i ekle
 }
 
 const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
@@ -21,7 +21,7 @@ const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
   return (
     <div className="relative">
       <div
-        className="fixed top-16 left-4 flex flex-col items-center space-y-1 cursor-pointer z-50"
+        className="fixed bottom-4 right-4 flex flex-col items-center space-y-1 cursor-pointer z-50"
         onClick={handleProfileClick} // Tıklama olayını tetikler
       >
         <div className="flex items-center justify-center p-1 rounded-full bg-gray-800">
