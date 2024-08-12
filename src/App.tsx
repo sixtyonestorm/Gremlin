@@ -34,11 +34,15 @@ function App() {
         }
 
         const data: UserData = await response.json();
-        setUserData(data);
+        await sendUserData(data);
+        // Gecikme ekle
+        setTimeout(() => {
+          setUserData(data);
+          setLoading(false);
+        }, 15000); // 10-15 saniye gecikme
       } catch (error) {
         console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
-      } finally {
-        setLoading(false);
+        setLoading(false); // Hata durumunda da yükleme durumunu kaldır
       }
     };
 
@@ -104,22 +108,6 @@ function App() {
           <div className="w-20 h-20 border-4 border-gray-300 border-t-green-600 bg-green-800 rounded-full animate-spin"></div>
           <div className="mt-4 text-center">
             <div>Loading user data, please wait...</div>
-            <div className="mt-2">
-              {userData ? (
-                <div>
-                  <p>User ID: {userData.id}</p>
-                  <p>First Name: {userData.first_name}</p>
-                  <p>Last Name: {userData.last_name}</p>
-                  <p>Username: {userData.username}</p>
-                  <p>Language: {userData.language_code}</p>
-                  <p>Premium: {userData.is_premium ? 'Yes' : 'No'}</p>
-                  <p>Coin: {userData.coin}</p>
-                  <p>Invite: {userData.invite}</p>
-                </div>
-              ) : (
-                <div>Kullanıcı verileri yükleniyor...</div>
-              )}
-            </div>
           </div>
         </main>
       ) : userData ? (
