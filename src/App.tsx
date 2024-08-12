@@ -26,11 +26,19 @@ const sendUserData = async (userData: UserData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify({
+        id: userData.id,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        username: userData.username,
+        language_code: userData.language_code,
+        is_premium: userData.is_premium,
+        // Diğer veriler buraya eklenebilir
+      }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text(); // Yanıt metnini oku
+      const errorText = await response.text();
       throw new Error(`Failed to send user data: ${errorText}`);
     }
 
