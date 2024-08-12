@@ -21,8 +21,8 @@ interface UserData {
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
   const [showGame, setShowGame] = useState(false); // Oyun ekranını kontrol etmek için state ekleyelim
+  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -96,11 +96,16 @@ function App() {
     <main className="pt-16 pb-16 flex flex-col items-center justify-center min-h-screen overflow-auto">
       <Header />
       <div className="w-full max-w-4xl p-4">
-        {showGame ? renderActiveComponent() : (
+        {!showGame ? (
           <div className="flex flex-col items-center justify-center h-full p-4">
-            <p className="text-lg text-gray-600">Kullanıcı verileri alındı. Oyun açılacak...</p>
-            <p className="text-sm text-gray-500">10 saniye bekleyin...</p>
+            <p className="text-lg text-gray-600">Kullanıcı verileri:</p>
+            <pre className="text-sm text-gray-600 bg-gray-100 p-4 rounded-lg border border-gray-300">
+              {JSON.stringify(userData, null, 2)}
+            </pre>
+            <p className="text-sm text-gray-500 mt-4">10 saniye bekleyin...</p>
           </div>
+        ) : (
+          renderActiveComponent()
         )}
       </div>
       <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
