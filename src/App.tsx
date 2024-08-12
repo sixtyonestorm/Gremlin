@@ -45,6 +45,7 @@ const sendUserData = async (userData: UserData) => {
 
 const updateUserLogin = async (userId: number) => {
   try {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1 saniye bekle
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: {
@@ -67,6 +68,7 @@ const updateUserLogin = async (userId: number) => {
 
 const updateUserLogout = async (userId: number) => {
   try {
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1 saniye bekle
     const response = await fetch(`${API_URL}/logout`, {
       method: 'POST',
       headers: {
