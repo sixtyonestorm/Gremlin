@@ -1,34 +1,55 @@
-import React, { useState } from 'react';
-import { FaUser } from 'react-icons/fa'; // Profil ikonunu içe aktar
-import ProfilePopup from './ProfilePopup'; // Profil popup bileşenini içe aktar
+import React, { useState, useEffect } from 'react';
+import { FaUser } from 'react-icons/fa';
+import axios from 'axios';
+import ProfilePopup from './ProfilePopup';
 
 interface ProfileProps {
-  username: string;
-  totalCoins: number; // Total coins state'i ekle
+  userId: number;
 }
 
-const Profile: React.FC<ProfileProps> = ({ username, totalCoins }) => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false); // Popup görünürlük state'i
+const Profile: React.FC<ProfileProps> = ({ userId }) => {
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [username, setUsername] = useState<string>('Unknown');
+  const [totalCoins, setTotalCoins] = useState<number>(0);
+
+  useEffect(() => {
+    // API'den kullanıcı verilerini al
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
+        const userData = response.data;
+
+        setUsername(userData.username || 'Unknown'); // Kullanıcı adını state'e ata
+        setTotalCoins(userData.coin || 0); // Coin miktarını state'e ata
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
 
   const handleProfileClick = () => {
-    setIsPopupVisible(true); // Profil simgesine tıklandığında popup'ı göster
+    setIsPopupVisible(true);
   };
 
   const handlePopupClose = () => {
-    setIsPopupVisible(false); // Popup'ı kapat
+    setIsPopupVisible(false);
   };
 
   return (
-    <div className="absolute top-4 left-4 flex flex-col items-center space-y-1 cursor-pointer z-50">
+    <div className="relative">
       <div
-        className="flex items-center justify-center p-1 rounded-full bg-gray-800"
-        onClick={handleProfileClick} // Tıklama olayını tetikler
+        className="fixed top-4 left-4 flex flex-col items-center space-y-1 cursor-pointer z-50"
+        onClick={handleProfileClick}
       >
-        <FaUser size={20} className="text-white" />
+        <div className="flex items-center justify-center p-1 rounded-full bg-gray-800">
+          <FaUser size={20} className="text-white" />
+        </div>
+        <span className="text-xs font-medium text-white">{username}</span> {/* Kullanıcı adı */}
       </div>
-      <span className="text-xs font-medium text-white">{username}</span>
 
-      {/* Profil popup'ını göstermek için state'e göre render et */}
+      {/* ProfilePopup açıldığında, username ve totalCoins bilgilerini geçiriyoruz */}
       {isPopupVisible && (
         <ProfilePopup username={username} totalCoins={totalCoins} onClose={handlePopupClose} />
       )}

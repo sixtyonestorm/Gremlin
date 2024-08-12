@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import WebApp from '@twa-dev/sdk';
 import Header from './components/NavstoHead/Header';
 import BottomNav from './components/NavstoHead/BottomNav';
 import Game from './components/Game/Game';
@@ -26,37 +25,27 @@ function App() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // WebApp verilerini al
-        if (WebApp.initDataUnsafe) {
-          const user = WebApp.initDataUnsafe?.user;
-          if (user) {
-            const userData: UserData = {
-              id: user.id,
-              first_name: user.first_name,
-              last_name: user.last_name || '',
-              username: user.username || '',
-              language_code: user.language_code || '',
-              is_premium: user.is_premium || false,
-            };
-            setUserData(userData);
-            await sendUserData(userData); // sendUserData çağrısını aktif et
-            setLoading(false);
-          } else {
-            console.error("Kullanıcı verisi mevcut değil.");
-            setLoading(false);
-          }
-        } else {
-          console.error("WebApp.initDataUnsafe mevcut değil.");
-          setLoading(false);
-        }
+        // Simülasyon kullanıcı verileri
+        const simulatedUserData: UserData = {
+          id: 1234567890,
+          first_name: 'John',
+          last_name: 'Doe',
+          username: 'johndoe',
+          language_code: 'en',
+          is_premium: true,
+        };
+        setUserData(simulatedUserData);
+
+        // Simüle edilmiş veriler ile sendUserData çağrısı
+        await sendUserData(simulatedUserData);
+        setLoading(false);
       } catch (error) {
-        console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
+        console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
         setLoading(false);
       }
     };
 
     fetchUserData();
-    console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
   }, []);
 
   const sendUserData = async (data: UserData) => {

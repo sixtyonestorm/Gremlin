@@ -1,78 +1,68 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Boss from './Boss';
-import Profile from '../Profile/Profile'; // Profil bileşenini import et
+import ProfilePopup from '../Profile/ProfilePopup'; // ProfilePopup bileşenini içe aktar
+import { FaUser } from 'react-icons/fa'; // Profil ikonunu içe aktar
 
 const Game: React.FC = () => {
-  const [username, setUsername] = useState<string>(''); // Kullanıcı adı state
-  const [coin, setCoin] = useState<number>(0); // Coin state
-  const [userId, setUserId] = useState<number | null>(null); // Kullanıcı ID state'i
-  const [loading, setLoading] = useState<boolean>(true); // Yüklenme durumu
+  const [username, setUsername] = useState<string>(''); 
+  const [coin, setCoin] = useState<number>(0); 
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false); // Profile popup state
+
+  // Sabit kullanıcı ID'si
+  const userId = 1655796423;
 
   useEffect(() => {
-    // Kullanıcı ID'sini API'den al
-    const fetchUserId = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/getUserId');
-        setUserId(response.data.userId);
+        const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
+        const userData = response.data;
+
+        // Kullanıcı verilerinin doğruluğunu kontrol et
+        setUsername(userData.username || 'Unknown');
+        setCoin(userData.coin || 0);
       } catch (error) {
-        console.error('Error fetching user ID:', error);
+        console.error('Error fetching user data:', error);
+        setUsername('Unknown');
       }
     };
 
-    fetchUserId();
+    fetchUserData();
   }, []);
 
-  useEffect(() => {
-    if (userId !== null) {
-      // Kullanıcı verilerini API'den al
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/userdata', { id: userId });
-          const userData = response.data;
-
-          setUsername(userData.username || 'Unknown');
-          setCoin(userData.coin || 0);
-          setLoading(false); // Veriler alındı, yüklenmeyi tamamla
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          setUsername('Unknown');
-          setLoading(false); // Hata durumunda da yüklenmeyi tamamla
-        }
-      };
-
-      fetchUserData();
-    }
-  }, [userId]);
-
   const handleBossClick = () => {
-    // Boss click işlemi yapılacaksa
+    // Boss tıklama işlevini burada tanımlayın
   };
 
-  const handleBossDeath = (coinAmount: number) => {
-    setCoin((prevCoin) => prevCoin + coinAmount);
+  const handleBossDeath = async (coinAmount: number) => {
+    try {
+      // Koin miktarını güncelle
+      setCoin(prevCoin => prevCoin + coinAmount);
 
-    // Coin güncellemesini backend'e gönder
-    const updateCoin = async () => {
-      try {
-        await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
-      } catch (error) {
-        console.error('Error updating coin:', error);
-      }
-    };
+      // Koin güncelleme işlemini yap
+      await axios.post('https://greserver-b4a1eced30d9.herokuapp.com/updatecoin', { id: userId, coin: coinAmount });
+    } catch (error) {
+      console.error('Error updating coin:', error);
+    }
+  };
 
-    updateCoin();
+  const toggleProfilePopup = () => {
+    setIsProfileOpen(prev => !prev); // Profil popup'un açılmasını/kapanmasını yönet
   };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-4 font-orbitron">
-      {/* Boss component */}
+      {/* Profil simgesi ve kullanıcı adı */}
+      <div className="absolute top-4 left-4 flex flex-col items-center space-y-1 cursor-pointer" onClick={toggleProfilePopup}>
+        <FaUser size={36} className="text-white bg-gray-800 p-2 rounded-full" />
+        <span className="text-white text-sm mt-1">{username}</span> {/* Kullanıcı adı */}
+      </div>
+
       <Boss onClick={handleBossClick} onDeath={handleBossDeath} />
 
-      {/* Boost component */}
-
-      {/* Profil bileşeni */}
-      {!loading && <Profile username={username} totalCoins={coin} />}
+      {isProfileOpen && (
+        <ProfilePopup username={username} totalCoins={coin} onClose={toggleProfilePopup} />
+      )}
     </div>
   );
 };
