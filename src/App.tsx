@@ -15,32 +15,29 @@ interface UserData {
   username?: string;
   language_code: string;
   is_premium?: boolean;
+  coin?: number;
+  invite?: number;
 }
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
+  const [activeComponent, setActiveComponent] = useState<string>('game');
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Simülasyon kullanıcı verileri
-        const simulatedUserData: UserData = {
-          id: 1234567890,
-          first_name: 'John',
-          last_name: 'Doe',
-          username: 'johndoe',
-          language_code: 'en',
-          is_premium: true,
-        };
-        setUserData(simulatedUserData);
+        const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/userdata');
+        
+        if (!response.ok) {
+          throw new Error('Ağ yanıtı başarısız oldu');
+        }
 
-        // Simüle edilmiş veriler ile sendUserData çağrısı
-        await sendUserData(simulatedUserData);
-        setLoading(false);
+        const data: UserData = await response.json();
+        setUserData(data);
       } catch (error) {
         console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
+      } finally {
         setLoading(false);
       }
     };
@@ -50,15 +47,35 @@ function App() {
 
   const sendUserData = async (data: UserData) => {
     try {
-      await fetch('https://greserver-b4a1eced30d9.herokuapp.com/userdata', {
+      const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/userdata', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
+
+      if (!response.ok) {
+        throw new Error('Ağ yanıtı başarısız oldu');
+      }
+      console.log('Veri başarıyla gönderildi');
     } catch (error) {
       console.error('Veri gönderme hatası:', error);
+    }
+  };
+
+  const updateUserData = async (updatedData: Partial<UserData>) => {
+    if (userData) {
+      const newData = { ...userData, ...updatedData };
+      setUserData(newData);
+      await sendUserData(newData);
+    }
+  };
+
+  const handleClick = () => {
+    // Örneğin, bir butona tıklandığında kullanıcı bilgisini güncelle
+    if (userData) {
+      updateUserData({ coin: userData.coin ? userData.coin + 100 : 100 });
     }
   };
 
@@ -96,6 +113,8 @@ function App() {
                   <p>Username: {userData.username}</p>
                   <p>Language: {userData.language_code}</p>
                   <p>Premium: {userData.is_premium ? 'Yes' : 'No'}</p>
+                  <p>Coin: {userData.coin}</p>
+                  <p>Invite: {userData.invite}</p>
                 </div>
               ) : (
                 <div>Kullanıcı verileri yükleniyor...</div>
@@ -108,6 +127,7 @@ function App() {
           <Header />
           <div className="w-full max-w-4xl p-4">
             {renderActiveComponent()}
+            <button onClick={handleClick}>Add Coins</button> {/* Test butonu */}
           </div>
           <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
         </main>
