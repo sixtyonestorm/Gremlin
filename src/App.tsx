@@ -22,6 +22,7 @@ function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
+  const [showGame, setShowGame] = useState(false); // Oyun ekranını kontrol etmek için state ekleyelim
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -45,6 +46,10 @@ function App() {
         console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
       } finally {
         setLoading(false);
+        // 10 saniye bekledikten sonra oyun bileşenini göster
+        setTimeout(() => {
+          setShowGame(true);
+        }, 10000); // 10 saniye
       }
     };
 
@@ -91,7 +96,12 @@ function App() {
     <main className="pt-16 pb-16 flex flex-col items-center justify-center min-h-screen overflow-auto">
       <Header />
       <div className="w-full max-w-4xl p-4">
-        {renderActiveComponent()}
+        {showGame ? renderActiveComponent() : (
+          <div className="flex flex-col items-center justify-center h-full p-4">
+            <p className="text-lg text-gray-600">Kullanıcı verileri alındı. Oyun açılacak...</p>
+            <p className="text-sm text-gray-500">10 saniye bekleyin...</p>
+          </div>
+        )}
       </div>
       <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
     </main>
