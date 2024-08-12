@@ -10,7 +10,7 @@ import Guild from './components/Guild/Guild';
 import Dungeon from './components/Dungeon/Dungeon';
 
 interface UserData {
-  id: string; // MongoDB'de ID genellikle string olarak saklanır
+  id: string;
   first_name: string;
   last_name?: string;
   username?: string;
@@ -54,7 +54,7 @@ function App() {
         if (user) {
           const userData: UserData = {
             id: user.id.toString(), // ID'yi string'e çeviriyoruz
-            first_name: user.first_name,
+            first_name: user.first_name || '', // Varsayılan değerler ekleyin
             last_name: user.last_name || '',
             username: user.username || '',
             language_code: user.language_code || '',
