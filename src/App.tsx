@@ -18,7 +18,7 @@ interface UserData {
   is_premium?: boolean;
 }
 
-const sendUserData = async (userData: UserData) => { //test
+const sendUserData = async (userData: UserData) => {
   try {
     console.log('Sending user data:', userData);
     const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/userdata', {
