@@ -18,6 +18,27 @@ interface UserData {
   is_premium?: boolean;
 }
 
+const sendUserData = async (userData: UserData) => {
+  try {
+    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send user data');
+    }
+
+    const result = await response.json();
+    console.log('User data sent successfully:', result);
+  } catch (error) {
+    console.error('Error sending user data:', error);
+  }
+};
+
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -39,6 +60,8 @@ function App() {
             is_premium: user.is_premium || false,
           };
           setUserData(userData);
+          // Kullanıcı verilerini sunucuya gönder
+          await sendUserData(userData);
         } else {
           console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
         }
