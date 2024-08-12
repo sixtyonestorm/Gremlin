@@ -10,37 +10,13 @@ import Guild from './components/Guild/Guild';
 import Dungeon from './components/Dungeon/Dungeon';
 
 interface UserData {
-  id: string;
+  id: number;
   first_name: string;
   last_name?: string;
   username?: string;
   language_code: string;
   is_premium?: boolean;
 }
-
-const sendUserData = async (userData: UserData) => {
-  try {
-    console.log('Sending user data:', userData);
-    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user/userdata', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to send user data: ${errorText}`);
-    }
-
-    const result = await response.json();
-    console.log('User data sent successfully:', result);
-  } catch (error) {
-    console.error('Error sending user data:', error);
-  }
-};
-
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
@@ -54,15 +30,14 @@ function App() {
         const user = WebApp.initDataUnsafe?.user;
         if (user) {
           const userData: UserData = {
-            id: user.id.toString(), // ID'yi string'e çeviriyoruz
-            first_name: user.first_name || '', // Varsayılan değerler ekleyin
+            id: user.id,
+            first_name: user.first_name,
             last_name: user.last_name || '',
             username: user.username || '',
             language_code: user.language_code || '',
             is_premium: user.is_premium || false,
           };
           setUserData(userData);
-          await sendUserData(userData); // API'ye kullanıcı verisini gönder
         } else {
           console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
         }
@@ -95,26 +70,31 @@ function App() {
     }
   };
 
+  if (loading) {
+    return (
+      <main className="flex flex-col items-center justify-center h-screen p-4">
+        <div className="w-20 h-20 border-4 border-gray-300 border-t-green-600 bg-green-800 rounded-full animate-spin"></div>
+        <p className="mt-4 text-lg text-gray-600">Kullanıcı verileri yükleniyor...</p>
+      </main>
+    );
+  }
+
+  if (!userData) {
+    return (
+      <main className="flex flex-col items-center justify-center h-screen p-4">
+        <p className="text-lg text-gray-600">Kullanıcı verisi mevcut değil. Lütfen tekrar deneyin.</p>
+      </main>
+    );
+  }
+
   return (
-    <>
-      {loading ? (
-        <main className="flex items-center justify-center h-screen p-4">
-          <div className="w-20 h-20 border-4 border-gray-300 border-t-green-600 bg-green-800 rounded-full animate-spin"></div>
-        </main>
-      ) : userData ? (
-        <main className="pt-16 pb-16 flex flex-col items-center justify-center min-h-screen overflow-auto">
-          <Header />
-          <div className="w-full max-w-4xl p-4">
-            {renderActiveComponent()}
-          </div>
-          <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
-        </main>
-      ) : (
-        <main className="flex items-center justify-center h-screen p-4">
-          <div>Kullanıcı verisi mevcut değil.</div>
-        </main>
-      )}
-    </>
+    <main className="pt-16 pb-16 flex flex-col items-center justify-center min-h-screen overflow-auto">
+      <Header />
+      <div className="w-full max-w-4xl p-4">
+        {renderActiveComponent()}
+      </div>
+      <BottomNav onNavItemClick={setActiveComponent} currentPath={activeComponent} />
+    </main>
   );
 }
 
