@@ -26,15 +26,7 @@ const sendUserData = async (userData: UserData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        id: userData.id,
-        first_name: userData.first_name,
-        last_name: userData.last_name,
-        username: userData.username,
-        language_code: userData.language_code,
-        is_premium: userData.is_premium,
-        // Diğer veriler buraya eklenebilir
-      }),
+      body: JSON.stringify(userData),
     });
 
     if (!response.ok) {
@@ -48,6 +40,7 @@ const sendUserData = async (userData: UserData) => {
     console.error('Error sending user data:', error);
   }
 };
+
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
