@@ -10,7 +10,6 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
   const popupRef = useRef<HTMLDivElement>(null);
   const [mousePowerLevel, setMousePowerLevel] = useState(1);
   const [attackSpeedLevel, setAttackSpeedLevel] = useState(1);
-  const [coins, setCoins] = useState(500); // Mevcut paralar, başlangıçta 500 olarak ayarlandı.
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
@@ -34,31 +33,16 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
 
   const handleUpgrade = (type: 'mousePower' | 'attackSpeed') => {
     if (type === 'mousePower') {
-      const cost = upgradeCosts.mousePower;
-      if (coins >= cost) {
-        setMousePowerLevel(prev => prev + 1);
-        setCoins(prev => prev - cost); // Parayı güncelle
-      } else {
-        alert('Not enough coins!'); // Yeterli para yoksa uyarı
-      }
+      setMousePowerLevel(prev => prev + 1);
     } else if (type === 'attackSpeed') {
-      const cost = upgradeCosts.attackSpeed;
-      if (coins >= cost) {
-        setAttackSpeedLevel(prev => prev + 1);
-        setCoins(prev => prev - cost); // Parayı güncelle
-      } else {
-        alert('Not enough coins!'); // Yeterli para yoksa uyarı
-      }
+      setAttackSpeedLevel(prev => prev + 1);
     }
   };
 
-  const handleKillerSlavePurchase = (index: number) => {
-    const slave = upgradeCosts.killerSlaves[index];
-    if (coins >= slave.cost) {
-      setCoins(prev => prev - slave.cost); // Parayı güncelle
-    } else {
-      alert('Not enough coins!'); // Yeterli para yoksa uyarı
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleKillerSlavePurchase = (_index?: number) => {
+    // İlgili işlemler burada yapılıyor
+    // Artık coin kontrolü yapılmıyor
   };
 
   return (
