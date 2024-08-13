@@ -19,7 +19,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-40">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 ">
       <div
         ref={popupRef}
         className="bg-gradient-to-br from-green-800 via-green-700 to-black p-6 rounded-lg shadow-2xl w-full max-w-sm animate-scale-up relative opacity-1"
