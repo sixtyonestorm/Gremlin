@@ -9,6 +9,14 @@ interface UserData {
   language_code: string;
   is_premium?: boolean;
   attack_power: number | undefined;
+  level: number | undefined;
+  Experience: number | undefined;
+  mined_boss_coin: number | undefined;
+  mined_mining_coin: number | undefined;
+  mined_quests_coin: number | undefined;
+  mined_dungeon_coin: number | undefined;
+  mined_ref_coin: number | undefined;
+  total_mined_coin: number | undefined;
 }
 
 interface ProfilePopupProps {
@@ -45,24 +53,36 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
             <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">First Name:</span>
-            <span className="text-green-400 font-semibold">{userData.first_name || 'N/A'}</span>
+            <span className="font-semibold text-blue-300">Rank:</span>
+            <span className="text-yellow-300 font-semibold">{userData.level || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Last Name:</span>
-            <span className="text-yellow-300 font-semibold">{userData.last_name || 'N/A'}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Language Code:</span>
-            <span className="text-red-400 font-semibold">{userData.language_code || 'N/A'}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Premium Status:</span>
-            <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
+            <span className="font-semibold text-blue-300">Experience:</span>
+            <span className="text-yellow-300 font-semibold">{userData.Experience || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Attack Power:</span>
             <span className="text-purple-300 font-semibold">{userData.attack_power || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Boss Coin Collection:</span>
+            <span className="text-purple-300 font-semibold">{userData.mined_boss_coin || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Quest Rewards:</span>
+            <span className="text-purple-300 font-semibold">{userData.mined_quests_coin || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Dungeon Loot:</span>
+            <span className="text-purple-300 font-semibold">{userData.mined_dungeon_coin || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Referral Seed:</span>
+            <span className="text-purple-300 font-semibold">{userData.mined_ref_coin || 'N/A'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Total Coin:</span>
+            <span className="text-purple-300 font-semibold">{userData.total_mined_coin || 'N/A'}</span>
           </div>
         </div>
 

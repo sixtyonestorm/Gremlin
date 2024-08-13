@@ -7,5 +7,13 @@ export interface UserData {
     language_code: string;
     is_premium?: boolean;
     attack_power: number | undefined;
+    level: number | undefined;
+    Experience: number | undefined;
+    mined_boss_coin: number | undefined;
+    mined_mining_coin: number | undefined;
+    mined_quests_coin: number | undefined;
+    mined_dungeon_coin: number | undefined;
+    mined_ref_coin: number | undefined;
+    total_mined_coin: number | undefined;
   }
   
