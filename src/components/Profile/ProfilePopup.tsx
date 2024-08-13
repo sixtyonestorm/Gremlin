@@ -1,27 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import { animatePopup } from '../Game/utils/popupanimations';
 
-// Kullanıcı verileri için bir arayüz oluşturuyoruz
-interface UserData {
-  username: string;
-  level: number;
-  experience: number;
-  power: number;
-  totalEarn: number;
-}
-
 interface ProfilePopupProps {
   isVisible: boolean;
   onClose: () => void;
-  userData: UserData; // Kullanıcı verilerini almak için prop
 }
 
-const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userData }) => {
+const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose }) => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
-      popupRef.current.style.opacity = "1";
+      popupRef.current.style.opacity = "1"; // Başlangıçta opacity değerini 1 olarak ayarlıyoruz.
       animatePopup(popupRef.current);
     }
   }, [isVisible]);
@@ -37,27 +27,27 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
         <h2 className="text-2xl font-extrabold text-yellow-400 mb-4 text-center">
           Profile Information
         </h2>
-
+        
         <div className="space-y-4 mb-4 text-base text-gray-200">
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Username:</span>
-            <span className="text-yellow-300 font-semibold">{userData.username}</span>
+            <span className="text-yellow-300 font-semibold">Gremlin1461</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Level:</span>
-            <span className="text-green-400 font-semibold">{userData.level}</span>
+            <span className="text-green-400 font-semibold">12</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Experience:</span>
-            <span className="text-yellow-300 font-semibold">{userData.experience} XP</span>
+            <span className="text-yellow-300 font-semibold">3456 XP</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Power:</span>
-            <span className="text-red-400 font-semibold">{userData.power}</span>
+            <span className="text-red-400 font-semibold">987</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Total Earn:</span>
-            <span className="text-purple-300 font-semibold">{userData.totalEarn} Coins</span>
+            <span className="text-purple-300 font-semibold">5678 Coins</span>
           </div>
         </div>
 
@@ -72,6 +62,6 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
       </div>
     </div>
   );
-};
+}
 
 export default ProfilePopup;
