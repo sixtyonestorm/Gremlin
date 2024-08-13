@@ -13,7 +13,7 @@ interface UserData {
 interface ProfilePopupProps {
   isVisible: boolean;
   onClose: () => void;
-  userData: UserData; // Kullanıcı verilerini props olarak alıyoruz
+  userData: UserData; // Kullanıcı verilerini props olarak alın
 }
 
 const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userData }) => {
@@ -37,7 +37,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
         <h2 className="text-2xl font-extrabold text-yellow-400 mb-4 text-center">
           Profile Information
         </h2>
-
+        
         <div className="space-y-4 mb-4 text-base text-gray-200">
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Username:</span>

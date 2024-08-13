@@ -1,45 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import ProfilePopup from './ProfilePopup'; // ProfilePopup bileşenini import ettik
-import profileWebp from '../../icons/profile.webp'; // WebP dosyasının yolunu import et
+import ProfilePopup from './ProfilePopup';
+import profileWebp from '../../icons/profile.webp';
+import { UserData } from '../types/UserData'; // UserData'yı import et
 
-interface UserData {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  language_code: string;
-  is_premium?: boolean;
-}
+import { useEffect, useState } from 'react';
 
 const Profile: React.FC = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null); // Kullanıcı verilerini saklamak için state
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    // Telegram Web App'den kullanıcı verilerini al
-    const fetchUserData = async () => {
-      try {
-        const user = window.Telegram?.WebApp?.initDataUnsafe?.user;
-        if (user) {
-          setUserData({
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name || '',
-            username: user.username || '',
-            language_code: user.language_code,
-            is_premium: user.is_premium || false,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching user data from Telegram:", error);
-      }
-    };
-
-    fetchUserData();
+    // some side effect code here
   }, []);
 
-  const handleProfileClick = () => {
-    setIsPopupVisible(true);
+  const handleProfileClick = async () => {
+    // Telegram WebApp'den kullanıcı bilgilerini al
+    const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+
+    if (telegramUserId) {
+      try {
+        // Kullanıcı verilerini veritabanından çekmek için API çağrısı yapın
+        const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${telegramUserId}`);
+        if (!response.ok) {
+          throw new Error('User not found');
+        }
+        const data: UserData = await response.json();
+        setUserData(data);
+        setIsPopupVisible(true);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    }
   };
 
   const handlePopupClose = () => {
@@ -61,11 +51,7 @@ const Profile: React.FC = () => {
 
       {/* ProfilePopup açıldığında görünür */}
       {isPopupVisible && userData && (
-        <ProfilePopup 
-          isVisible={isPopupVisible} 
-          onClose={handlePopupClose} 
-          userData={userData} // Kullanıcı verilerini geçiyoruz
-        />
+        <ProfilePopup isVisible={isPopupVisible} onClose={handlePopupClose} userData={userData} />
       )}
     </div>
   );
