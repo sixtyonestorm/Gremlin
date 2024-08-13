@@ -20,42 +20,20 @@ interface UserData {
 
 const sendUserData = async (userData: UserData) => { 
   try {
-    // Önce kullanıcıyı veritabanında kontrol et
-    const checkResponse = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userData.id}`);
-    
-    if (checkResponse.ok) {
-      // Kullanıcı mevcut, güncelle
-      const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userData.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/api/user-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
 
-      if (!response.ok) {
-        throw new Error('Failed to update user data');
-      }
-
-      const result = await response.json();
-      console.log('User data updated successfully:', result);
-    } else {
-      // Kullanıcı mevcut değil, ekle
-      const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/api/user-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send user data');
-      }
-
-      const result = await response.json();
-      console.log('User data sent successfully:', result);
+    if (!response.ok) {
+      throw new Error('Failed to send user data');
     }
+
+    const result = await response.json();
+    console.log('User data sent successfully:', result);
   } catch (error) {
     console.error('Error sending user data:', error);
   }

@@ -9,14 +9,17 @@ const Profile: React.FC = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
-    // some side effect code here
+    // side effect code here
   }, []);
 
   const handleProfileClick = async () => {
     // Telegram WebApp'den kullanıcı bilgilerini al
-    const UserId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+    const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
 
-    if (UserId) {
+    if (telegramUser) {
+      const UserId = telegramUser.id;
+      const telegramUsername = telegramUser.username;
+
       try {
         // Kullanıcı verilerini veritabanından çekmek için API çağrısı yapın
         const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`);
@@ -24,10 +27,32 @@ const Profile: React.FC = () => {
           throw new Error('User not found');
         }
         const data: UserData = await response.json();
-        setUserData(data);
+
+        // Kullanıcı verilerini güncelleyin (eğer username değiştiyse)
+        if (data.username !== telegramUsername) {
+          const updateResponse = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: telegramUsername }),
+          });
+
+          if (!updateResponse.ok) {
+            throw new Error('Failed to update username');
+          }
+          
+          // Güncellenmiş kullanıcı verilerini al
+          const updatedData: UserData = await updateResponse.json();
+          setUserData(updatedData);
+        } else {
+          // Kullanıcı verilerini doğrudan kullan
+          setUserData(data);
+        }
+
         setIsPopupVisible(true);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching or updating user data:', error);
       }
     }
   };
