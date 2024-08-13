@@ -1,56 +1,20 @@
-// ProfilePopup.tsx
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { animatePopup } from '../Game/utils/popupanimations';
 
 interface ProfilePopupProps {
   isVisible: boolean;
   onClose: () => void;
-  userId: number; // Kullanıcı ID'si props olarak alınır
 }
 
-interface UserData {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  language_code: string;
-  is_premium?: boolean;
-}
-
-const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId }) => {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose }) => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
-      popupRef.current.style.opacity = "1";
+      popupRef.current.style.opacity = "1"; // Başlangıçta opacity değerini 1 olarak ayarlıyoruz.
       animatePopup(popupRef.current);
     }
   }, [isVisible]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
-        if (!response.ok) {
-          throw new Error(`Error fetching data: ${response.statusText}`);
-        }
-        const data: UserData = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        setError('Failed to fetch user data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (userId) {
-      fetchUserData();
-    }
-  }, [userId]);
 
   if (!isVisible) return null;
 
@@ -63,37 +27,29 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
         <h2 className="text-2xl font-extrabold text-yellow-400 mb-4 text-center">
           Profile Information
         </h2>
-
-        {loading ? (
-          <div className="text-center text-gray-300">Loading...</div>
-        ) : error ? (
-          <div className="text-center text-red-400">{error}</div>
-        ) : userData ? (
-          <div className="space-y-4 mb-4 text-base text-gray-200">
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-blue-300">Username:</span>
-              <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-blue-300">First Name:</span>
-              <span className="text-green-400 font-semibold">{userData.first_name || 'N/A'}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-blue-300">Last Name:</span>
-              <span className="text-yellow-300 font-semibold">{userData.last_name || 'N/A'}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-blue-300">Language Code:</span>
-              <span className="text-red-400 font-semibold">{userData.language_code || 'N/A'}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold text-blue-300">Premium Status:</span>
-              <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
-            </div>
+        
+        <div className="space-y-4 mb-4 text-base text-gray-200">
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Username:</span>
+            <span className="text-yellow-300 font-semibold">Gremlin1461</span>
           </div>
-        ) : (
-          <div className="text-center text-gray-300">No data available</div>
-        )}
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Level:</span>
+            <span className="text-green-400 font-semibold">12</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Experience:</span>
+            <span className="text-yellow-300 font-semibold">3456 XP</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Power:</span>
+            <span className="text-red-400 font-semibold">987</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Total Earn:</span>
+            <span className="text-purple-300 font-semibold">5678 Coins</span>
+          </div>
+        </div>
 
         <div className="flex justify-center">
           <button
@@ -106,6 +62,6 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
       </div>
     </div>
   );
-};
+}
 
 export default ProfilePopup;
