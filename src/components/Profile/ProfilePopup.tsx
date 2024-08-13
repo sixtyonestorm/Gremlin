@@ -1,3 +1,4 @@
+// ProfilePopup.tsx
 import React, { useEffect, useState, useRef } from 'react';
 import { animatePopup } from '../Game/utils/popupanimations';
 
@@ -18,12 +19,13 @@ interface UserData {
 
 const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true); // Yüklenme durumu ekleyelim
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
-      popupRef.current.style.opacity = "1"; // Başlangıçta opacity değerini 1 olarak ayarlıyoruz.
+      popupRef.current.style.opacity = "1";
       animatePopup(popupRef.current);
     }
   }, [isVisible]);
@@ -39,8 +41,9 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
         setUserData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setError('Failed to fetch user data');
       } finally {
-        setLoading(false); // Yüklenmeyi bitir
+        setLoading(false);
       }
     };
 
@@ -60,9 +63,11 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
         <h2 className="text-2xl font-extrabold text-yellow-400 mb-4 text-center">
           Profile Information
         </h2>
-        
+
         {loading ? (
           <div className="text-center text-gray-300">Loading...</div>
+        ) : error ? (
+          <div className="text-center text-red-400">{error}</div>
         ) : userData ? (
           <div className="space-y-4 mb-4 text-base text-gray-200">
             <div className="flex justify-between items-center">
@@ -101,6 +106,6 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
       </div>
     </div>
   );
-}
+};
 
 export default ProfilePopup;
