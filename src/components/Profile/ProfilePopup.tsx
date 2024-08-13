@@ -8,6 +8,7 @@ interface ProfilePopupProps {
 }
 
 interface UserData {
+  id: number
   username?: string;
   level?: number;
   experience?: number;
