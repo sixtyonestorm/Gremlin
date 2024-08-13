@@ -1,12 +1,22 @@
 import React, { useEffect, useRef } from 'react';
 import { animatePopup } from '../Game/utils/popupanimations';
 
+interface UserData {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code: string;
+  is_premium?: boolean;
+}
+
 interface ProfilePopupProps {
   isVisible: boolean;
   onClose: () => void;
+  userData: UserData; // Kullanıcı verilerini props olarak alıyoruz
 }
 
-const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose }) => {
+const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userData }) => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,27 +37,27 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose }) => {
         <h2 className="text-2xl font-extrabold text-yellow-400 mb-4 text-center">
           Profile Information
         </h2>
-        
+
         <div className="space-y-4 mb-4 text-base text-gray-200">
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Username:</span>
-            <span className="text-yellow-300 font-semibold">Gremlin1461</span>
+            <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Level:</span>
-            <span className="text-green-400 font-semibold">12</span>
+            <span className="font-semibold text-blue-300">First Name:</span>
+            <span className="text-green-400 font-semibold">{userData.first_name || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Experience:</span>
-            <span className="text-yellow-300 font-semibold">3456 XP</span>
+            <span className="font-semibold text-blue-300">Last Name:</span>
+            <span className="text-yellow-300 font-semibold">{userData.last_name || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Power:</span>
-            <span className="text-red-400 font-semibold">987</span>
+            <span className="font-semibold text-blue-300">Language Code:</span>
+            <span className="text-red-400 font-semibold">{userData.language_code || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Total Earn:</span>
-            <span className="text-purple-300 font-semibold">5678 Coins</span>
+            <span className="font-semibold text-blue-300">Premium Status:</span>
+            <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
           </div>
         </div>
 
