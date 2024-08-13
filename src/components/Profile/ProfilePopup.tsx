@@ -18,6 +18,7 @@ interface UserData {
 
 const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true); // Yüklenme durumu ekleyelim
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,12 +33,14 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
       try {
         const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error(`Error fetching data: ${response.statusText}`);
         }
         const data: UserData = await response.json();
         setUserData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false); // Yüklenmeyi bitir
       }
     };
 
@@ -58,34 +61,34 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userId 
           Profile Information
         </h2>
         
-        <div className="space-y-4 mb-4 text-base text-gray-200">
-          {userData ? (
-            <>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-300">Username:</span>
-                <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-300">First Name:</span>
-                <span className="text-green-400 font-semibold">{userData.first_name || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-300">Last Name:</span>
-                <span className="text-yellow-300 font-semibold">{userData.last_name || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-300">Language Code:</span>
-                <span className="text-red-400 font-semibold">{userData.language_code || 'N/A'}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="font-semibold text-blue-300">Premium Status:</span>
-                <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
-              </div>
-            </>
-          ) : (
-            <div className="text-center text-gray-300">Loading...</div>
-          )}
-        </div>
+        {loading ? (
+          <div className="text-center text-gray-300">Loading...</div>
+        ) : userData ? (
+          <div className="space-y-4 mb-4 text-base text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-blue-300">Username:</span>
+              <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-blue-300">First Name:</span>
+              <span className="text-green-400 font-semibold">{userData.first_name || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-blue-300">Last Name:</span>
+              <span className="text-yellow-300 font-semibold">{userData.last_name || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-blue-300">Language Code:</span>
+              <span className="text-red-400 font-semibold">{userData.language_code || 'N/A'}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="font-semibold text-blue-300">Premium Status:</span>
+              <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="text-center text-gray-300">No data available</div>
+        )}
 
         <div className="flex justify-center">
           <button
