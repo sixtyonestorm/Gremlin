@@ -6,5 +6,6 @@ export interface UserData {
     username?: string;
     language_code: string;
     is_premium?: boolean;
+    attack_power: number | undefined;
   }
   

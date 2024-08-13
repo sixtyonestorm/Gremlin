@@ -8,6 +8,7 @@ interface UserData {
   username?: string;
   language_code: string;
   is_premium?: boolean;
+  attack_power: number | undefined;
 }
 
 interface ProfilePopupProps {
@@ -58,6 +59,10 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Premium Status:</span>
             <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-blue-300">Premium Status:</span>
+            <span className="text-purple-300 font-semibold">{userData.attack_power || 'N/A'}</span>
           </div>
         </div>
 
