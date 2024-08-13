@@ -81,7 +81,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
                 onClick={() => handleUpgrade('mousePower')}
                 className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
               >
-                Upgrade ({upgradeCosts.mousePower} Coins)
+                Upgrade
               </button>
             </div>
             <p className="text-gray-300 text-xs">
@@ -98,7 +98,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
                 onClick={() => handleUpgrade('attackSpeed')}
                 className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
               >
-                Upgrade ({upgradeCosts.attackSpeed} Coins)
+                Upgrade
               </button>
             </div>
             <p className="text-gray-300 text-xs">
@@ -120,7 +120,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
                   onClick={() => handleKillerSlavePurchase(index)}
                   className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
                 >
-                  Buy ({slave.cost} Coins)
+                  Buy
                 </button>
               </div>
             ))}
