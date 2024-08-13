@@ -72,7 +72,7 @@ function App() {
         // 10 saniye bekledikten sonra oyun bileşenini göster
         setTimeout(() => {
           setShowGame(true);
-        }, 4000); // 10 saniye
+        }, 10000); // 10 saniye
       }
     };
 
@@ -102,7 +102,7 @@ function App() {
     return (
       <main className="flex flex-col items-center justify-center h-screen p-4">
         <div className="w-20 h-20 border-4 border-gray-300 border-t-green-600 bg-green-800 rounded-full animate-spin"></div>
-        {/* <p className="mt-4 text-lg text-gray-600">Kullanıcı verileri yükleniyor...</p> */}
+        <p className="mt-4 text-lg text-gray-600">Kullanıcı verileri yükleniyor...</p>
       </main>
     );
   }
@@ -121,11 +121,11 @@ function App() {
       <div className="w-full max-w-4xl p-4">
         {!showGame ? (
           <div className="flex flex-col items-center justify-center h-full p-4">
-            {/* <p className="text-lg text-gray-600">Kullanıcı verileri:</p> */}
+            <p className="text-lg text-gray-600">Kullanıcı verileri:</p>
             <pre className="text-sm text-gray-600 bg-gray-100 p-4 rounded-lg border border-gray-300">
               {JSON.stringify(userData, null, 2)}
             </pre>
-            {/* <p className="text-sm text-gray-500 mt-4">10 saniye bekleyin...</p> */}
+            <p className="text-sm text-gray-500 mt-4">10 saniye bekleyin...</p>
           </div>
         ) : (
           renderActiveComponent()
