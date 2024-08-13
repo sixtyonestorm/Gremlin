@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import WebApp from '@twa-dev/sdk';
 import Header from './components/NavstoHead/Header';
 import BottomNav from './components/NavstoHead/BottomNav';
 import Game from './components/Game/Game';
@@ -19,70 +18,59 @@ interface UserData {
 }
 
 const sendUserData = async (userData: UserData) => {
-  try {
-    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
+  // Bu fonksiyon sadece API'ye veri gönderir, şu an yerel test için devre dışı bırakabilirsiniz
+  // const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user-data', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //   },
+  //   body: JSON.stringify(userData),
+  // });
 
-    if (!response.ok) {
-      throw new Error('Failed to send user data');
-    }
+  // if (!response.ok) {
+  //   throw new Error('Failed to send user data');
+  // }
 
-    const result = await response.json();
-    console.log('User data sent successfully:', result);
-  } catch (error) {
-    console.error('Error sending user data:', error);
-  }
+  // const result = await response.json();
+  // console.log('User data sent successfully:', result);
+  console.log('User data simulated successfully:', userData);
 };
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showGame, setShowGame] = useState(false); // Oyun ekranını kontrol etmek için state ekleyelim
-  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
+  const [showGame, setShowGame] = useState(false);
+  const [activeComponent, setActiveComponent] = useState<string>('game');
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // WebApp SDK'dan kullanıcı verilerini al
-        const user = WebApp.initDataUnsafe?.user;
-        if (user) {
-          const userData: UserData = {
-            id: user.id,
-            first_name: user.first_name,
-            last_name: user.last_name || '',
-            username: user.username || '',
-            language_code: user.language_code || '',
-            is_premium: user.is_premium || false,
-          };
-          setUserData(userData);
-          // Kullanıcı verilerini sunucuya gönder
-          await sendUserData(userData);
-        } else {
-          console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
-        }
+        // Simüle edilmiş kullanıcı verilerini burada oluşturun
+        const simulatedUserData: UserData = {
+          id: 12345,
+          first_name: 'John',
+          last_name: 'Doe',
+          username: 'GremlinKiller145',
+          language_code: 'en',
+          is_premium: false,
+        };
+        
+        // Simüle edilmiş kullanıcı verisini state'e ayarla
+        setUserData(simulatedUserData);
+        
+        // Kullanıcı verilerini 'gönder' (simülasyon)
+        await sendUserData(simulatedUserData);
       } catch (error) {
-        console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
+        console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
       } finally {
         setLoading(false);
-        // 10 saniye bekledikten sonra oyun bileşenini göster
         setTimeout(() => {
           setShowGame(true);
-        }, 10000); // 10 saniye
+        }, 10000);
       }
     };
 
     fetchUserData();
-    console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
-
-    // Ekranı tam ekran yap
-    if (window.Telegram && window.Telegram.WebApp) {
-      window.Telegram.WebApp.expand();
-    }
   }, []);
 
   const renderActiveComponent = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FaUser } from 'react-icons/fa'; // FaUser ikonunu import ettik
 import ProfilePopup from './ProfilePopup'; // ProfilePopup bileşenini import ettik
+import profileSvg from '../icons/profile.svg'; // SVG dosyasının yolunu import et
 
 const Profile: React.FC = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -21,7 +21,7 @@ const Profile: React.FC = () => {
       >
         {/* Profil simgesi */}
         <div className="bg-gradient-to-br from-red-700 via-yellow-500 to-black rounded-full p-2 transition-transform transform hover:scale-110 hover:cursor-pointer">
-          <FaUser className="text-white text-lg" />
+          <img src={profileSvg} alt="Profile" className="w-6 h-6" /> {/* SVG'yi img etiketi ile kullan */}
         </div>
         <span className="text-white text-xs mt-1">Stats</span> {/* Profil adı */}
       </div>
