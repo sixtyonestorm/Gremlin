@@ -51,7 +51,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
                 onClick={() => handleKillerSlavePurchase(index)}
                 className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 ease-in-out text-xs"
               >
-                Rent
+                Kirala
               </button>
             </div>
           ))}
