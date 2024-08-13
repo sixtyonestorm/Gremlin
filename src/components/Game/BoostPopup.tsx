@@ -11,6 +11,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
+      // Sadece animatePopup fonksiyonunu kullanıyoruz
       animatePopup(popupRef.current);
     }
   }, [isVisible]);
@@ -33,7 +34,7 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
     <div className="fixed inset-0 flex items-center justify-center z-[9999] p-2 bg-gray-900 bg-opacity-50">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-3 rounded-lg shadow-2xl w-full max-w-sm h-auto overflow-auto animate-scale-up"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-3 rounded-lg shadow-2xl w-full max-w-sm h-auto overflow-auto"
       >
         <h2 className="text-sm font-bold text-yellow-300 mb-2 text-center">
           Killer Slaves
