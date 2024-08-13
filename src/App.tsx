@@ -78,6 +78,11 @@ function App() {
 
     fetchUserData();
     console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
+
+    // Ekranı tam ekran yap
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.expand();
+    }
   }, []);
 
   const renderActiveComponent = () => {
