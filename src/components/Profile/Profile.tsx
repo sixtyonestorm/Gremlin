@@ -28,7 +28,7 @@ const Profile: React.FC = () => {
 
       {/* ProfilePopup açıldığında görünür */}
       {isPopupVisible && (
-        <ProfilePopup isVisible={isPopupVisible} onClose={handlePopupClose} />
+        <ProfilePopup isVisible={isPopupVisible} onClose={handlePopupClose} userId={0} />
       )}
     </div>
   );
