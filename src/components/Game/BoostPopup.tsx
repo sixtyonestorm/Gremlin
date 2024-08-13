@@ -1,20 +1,16 @@
-import React, { useEffect, useRef } from 'react';
-import { animatePopup } from './utils/popupanimations'; // Adjust the path as needed
-
-interface Upgrade {
-  name: string;
-  description: string;
-  cost?: number; // Optional cost property
-}
+import React, { useEffect, useRef, useState } from 'react';
+import { animatePopup } from '../Game/utils/popupanimations'; // Güncellenmiş yol
 
 interface BoostPopupProps {
   isVisible: boolean;
   onClose: () => void;
-  upgrades: Upgrade[];
 }
 
-const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose, upgrades }) => {
+const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose }) => {
   const popupRef = useRef<HTMLDivElement>(null);
+  const [mousePowerLevel, setMousePowerLevel] = useState(1);
+  const [attackSpeedLevel, setAttackSpeedLevel] = useState(1);
+  const [coins, setCoins] = useState(500); // Mevcut paralar, başlangıçta 500 olarak ayarlandı.
 
   useEffect(() => {
     if (isVisible && popupRef.current) {
@@ -24,47 +20,117 @@ const BoostPopup: React.FC<BoostPopupProps> = ({ isVisible, onClose, upgrades })
 
   if (!isVisible) return null;
 
-  const dailyBoosters = upgrades.filter(upgrade => !upgrade.cost);
-  const otherBoosts = upgrades.filter(upgrade => upgrade.cost);
+  // Yükseltme maliyetleri ve Killer Slave bilgileri
+  const upgradeCosts = {
+    mousePower: mousePowerLevel * 50, // Her seviye için maliyeti artır
+    attackSpeed: attackSpeedLevel * 30, // Her seviye için maliyeti artır
+    killerSlaves: [
+      { name: 'Common Killer Slave', power: 5, bossesPerDay: 5, cost: 100 },
+      { name: 'Rare Killer Slave', power: 10, bossesPerDay: 10, cost: 250 },
+      { name: 'Epic Killer Slave', power: 20, bossesPerDay: 20, cost: 500 },
+      { name: 'Legend Killer Slave', power: 40, bossesPerDay: 40, cost: 1000 },
+    ],
+  };
+
+  const handleUpgrade = (type: 'mousePower' | 'attackSpeed') => {
+    if (type === 'mousePower') {
+      const cost = upgradeCosts.mousePower;
+      if (coins >= cost) {
+        setMousePowerLevel(prev => prev + 1);
+        setCoins(prev => prev - cost); // Parayı güncelle
+      } else {
+        alert('Not enough coins!'); // Yeterli para yoksa uyarı
+      }
+    } else if (type === 'attackSpeed') {
+      const cost = upgradeCosts.attackSpeed;
+      if (coins >= cost) {
+        setAttackSpeedLevel(prev => prev + 1);
+        setCoins(prev => prev - cost); // Parayı güncelle
+      } else {
+        alert('Not enough coins!'); // Yeterli para yoksa uyarı
+      }
+    }
+  };
+
+  const handleKillerSlavePurchase = (index: number) => {
+    const slave = upgradeCosts.killerSlaves[index];
+    if (coins >= slave.cost) {
+      setCoins(prev => prev - slave.cost); // Parayı güncelle
+    } else {
+      alert('Not enough coins!'); // Yeterli para yoksa uyarı
+    }
+  };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      {/* Overlay to make the background inactive */}
-      <div className="absolute inset-0 bg-black opacity-70 z-40" onClick={onClose}></div>
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-2 bg-gray-900 bg-opacity-50">
       <div
         ref={popupRef}
-        className="relative bg-gradient-to-br from-green-900 via-green-800 to-green-700 p-6 rounded-lg shadow-lg max-w-md w-full z-50"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-2 rounded-lg shadow-2xl w-full max-w-4xl h-auto overflow-auto animate-scale-up"
       >
-        <h2 className="text-xl font-bold text-white mb-4 text-center">Boosters</h2>
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold shadow-md hover:bg-red-700 transition duration-300 ease-in-out"
-        >
-          &times;
-        </button>
-        {/* Daily Boosters Section */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          {dailyBoosters.map((upgrade, index) => (
-            <div key={index} className="flex-1 min-w-[140px] p-4 bg-gradient-to-r from-green-700 to-green-700 rounded-lg shadow-lg text-center">
-              <h3 className="text-sm font-semibold text-white">{upgrade.name}</h3>
-              <p className="text-xs text-gray-100">{upgrade.description}</p>
+        <h2 className="text-lg font-bold text-yellow-300 mb-2 text-center">
+          Upgrade Features
+        </h2>
+
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          {/* Mouse Power */}
+          <div className="bg-green-900 p-2 rounded-lg shadow-md flex-1">
+            <h3 className="text-sm font-semibold text-yellow-400 mb-1">Mouse Power</h3>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-blue-300">Level {mousePowerLevel}</span>
+              <button
+                onClick={() => handleUpgrade('mousePower')}
+                className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
+              >
+                Upgrade ({upgradeCosts.mousePower} Coins)
+              </button>
             </div>
-          ))}
-        </div>
-        {/* Other Boosts Section */}
-        <div className="overflow-y-auto max-h-[calc(100vh-320px)]">
-          {otherBoosts.map((upgrade, index) => (
-            <div key={index} className="mb-4 p-4 rounded-lg shadow-md bg-green-800">
-              <h3 className="text-sm font-semibold text-white">{upgrade.name}</h3>
-              <p className="text-xs text-gray-300">{upgrade.description}</p>
-              <span className="block mt-2 text-right text-yellow-300 text-xs">Cost: {upgrade.cost} Coins</span>
+            <p className="text-gray-300 text-xs">
+              Increases mouse clicking power. Higher levels improve efficiency.
+            </p>
+          </div>
+
+          {/* Attack Speed */}
+          <div className="bg-green-900 p-2 rounded-lg shadow-md flex-1">
+            <h3 className="text-sm font-semibold text-yellow-400 mb-1">Attack Speed</h3>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-blue-300">Level {attackSpeedLevel}</span>
+              <button
+                onClick={() => handleUpgrade('attackSpeed')}
+                className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
+              >
+                Upgrade ({upgradeCosts.attackSpeed} Coins)
+              </button>
             </div>
-          ))}
+            <p className="text-gray-300 text-xs">
+              Increases the speed at which attacks are performed. Higher levels increase attack speed.
+            </p>
+          </div>
+
+          {/* Killer Slaves */}
+          <div className="bg-green-900 p-2 rounded-lg shadow-md flex-1">
+            <h3 className="text-sm font-semibold text-yellow-400 mb-1">Killer Slaves</h3>
+            {upgradeCosts.killerSlaves.map((slave, index) => (
+              <div key={index} className="flex justify-between items-center mb-2">
+                <div className="flex flex-col">
+                  <span className="text-blue-300 font-semibold">{slave.name}</span>
+                  <span className="text-yellow-300 text-xs">Power: {slave.power}</span>
+                  <span className="text-yellow-300 text-xs">Bosses/Day: {slave.bossesPerDay}</span>
+                </div>
+                <button
+                  onClick={() => handleKillerSlavePurchase(index)}
+                  className="px-2 py-1 bg-gradient-to-r from-green-800 via-green-700 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-700 hover:via-green-600 hover:to-green-500 transition duration-300 ease-in-out text-xs"
+                >
+                  Buy ({slave.cost} Coins)
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex justify-center mt-6">
+
+        <div className="flex justify-center mt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gradient-to-r from-green-400 to-green-500 text-black font-semibold rounded-lg shadow-md hover:from-green-500 hover:to-green-600 transition duration-300 ease-in-out text-sm"
+            className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-700 transition duration-300 ease-in-out text-xs"
           >
             Close
           </button>
