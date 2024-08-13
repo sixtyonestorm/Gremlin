@@ -68,11 +68,11 @@ function App() {
       } catch (error) {
         console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
       } finally {
-        setLoading(false);
-        // 10 saniye bekledikten sonra oyun bileşenini göster
+        // 5 saniye bekledikten sonra yüklenmeyi bitir ve oyun bileşenini göster
         setTimeout(() => {
+          setLoading(false);
           setShowGame(true);
-        }, 5000); // 10 saniye
+        }, 5000); // 5 saniye
       }
     };
 
@@ -114,7 +114,7 @@ function App() {
   if (!userData) {
     return (
       <main className="flex flex-col items-center justify-center h-screen p-4">
-        {/* <p className="text-lg text-gray-600">Kullanıcı verisi mevcut değil. Lütfen tekrar deneyin.</p> */}
+        {/* Kullanıcı verisi mevcut değilken bileşen */}
       </main>
     );
   }
