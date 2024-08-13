@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import WebApp from '@twa-dev/sdk';
 import Header from './components/NavstoHead/Header';
 import BottomNav from './components/NavstoHead/BottomNav';
 import Game from './components/Game/Game';
@@ -18,59 +19,65 @@ interface UserData {
 }
 
 const sendUserData = async (userData: UserData) => {
-  // Bu fonksiyon sadece API'ye veri gönderir, şu an yerel test için devre dışı bırakabilirsiniz
-  // const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user-data', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify(userData),
-  // });
+  try {
+    const response = await fetch('https://greserver-b4a1eced30d9.herokuapp.com/user-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
 
-  // if (!response.ok) {
-  //   throw new Error('Failed to send user data');
-  // }
+    if (!response.ok) {
+      throw new Error('Failed to send user data');
+    }
 
-  // const result = await response.json();
-  // console.log('User data sent successfully:', result);
-  console.log('User data simulated successfully:', userData);
+    const result = await response.json();
+    console.log('User data sent successfully:', result);
+  } catch (error) {
+    console.error('Error sending user data:', error);
+  }
 };
 
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showGame, setShowGame] = useState(false);
-  const [activeComponent, setActiveComponent] = useState<string>('game');
+  const [showGame, setShowGame] = useState(false); // Oyun ekranını kontrol etmek için state ekleyelim
+  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Simüle edilmiş kullanıcı verilerini burada oluşturun
-        const simulatedUserData: UserData = {
-          id: 12345,
-          first_name: 'John',
-          last_name: 'Doe',
-          username: 'GremlinKiller145',
-          language_code: 'en',
-          is_premium: false,
-        };
-        
-        // Simüle edilmiş kullanıcı verisini state'e ayarla
-        setUserData(simulatedUserData);
-        
-        // Kullanıcı verilerini 'gönder' (simülasyon)
-        await sendUserData(simulatedUserData);
+        // WebApp SDK'dan kullanıcı verilerini al
+        const user = WebApp.initDataUnsafe?.user;
+        if (user) {
+          const userData: UserData = {
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name || '',
+            username: user.username || '',
+            language_code: user.language_code || '',
+            is_premium: user.is_premium || false,
+          };
+          setUserData(userData);
+          // Kullanıcı verilerini sunucuya gönder
+          await sendUserData(userData);
+        } else {
+          console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
+        }
       } catch (error) {
-        console.error('Kullanıcı verileri alınırken bir hata oluştu:', error);
+        console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
       } finally {
         setLoading(false);
+        // 10 saniye bekledikten sonra oyun bileşenini göster
         setTimeout(() => {
           setShowGame(true);
-        }, 10000);
+        }, 4000); // 10 saniye
       }
     };
 
     fetchUserData();
+    console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
   }, []);
 
   const renderActiveComponent = () => {
@@ -95,7 +102,7 @@ function App() {
     return (
       <main className="flex flex-col items-center justify-center h-screen p-4">
         <div className="w-20 h-20 border-4 border-gray-300 border-t-green-600 bg-green-800 rounded-full animate-spin"></div>
-        <p className="mt-4 text-lg text-gray-600">Kullanıcı verileri yükleniyor...</p>
+        {/* <p className="mt-4 text-lg text-gray-600">Kullanıcı verileri yükleniyor...</p> */}
       </main>
     );
   }
@@ -114,11 +121,11 @@ function App() {
       <div className="w-full max-w-4xl p-4">
         {!showGame ? (
           <div className="flex flex-col items-center justify-center h-full p-4">
-            <p className="text-lg text-gray-600">Kullanıcı verileri:</p>
+            {/* <p className="text-lg text-gray-600">Kullanıcı verileri:</p> */}
             <pre className="text-sm text-gray-600 bg-gray-100 p-4 rounded-lg border border-gray-300">
               {JSON.stringify(userData, null, 2)}
             </pre>
-            <p className="text-sm text-gray-500 mt-4">10 saniye bekleyin...</p>
+            {/* <p className="text-sm text-gray-500 mt-4">10 saniye bekleyin...</p> */}
           </div>
         ) : (
           renderActiveComponent()

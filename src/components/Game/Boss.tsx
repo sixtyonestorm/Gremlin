@@ -21,12 +21,7 @@ const bossDataList: BossData[] = [
   { id: 3, name: 'Shadow Beast', health: 150, imageSrc: gremlin3, coinAmount: 300 },
 ];
 
-interface BossProps {
-  onClick: () => void;
-  onDeath: (coinAmount: number) => void;
-}
-
-const Boss: React.FC<BossProps> = ({ onClick, onDeath }) => {
+const Boss: React.FC = () => {
   const [currentBossIndex, setCurrentBossIndex] = useState(0);
   const [currentHealth, setCurrentHealth] = useState(bossDataList[currentBossIndex].health);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -45,10 +40,9 @@ const Boss: React.FC<BossProps> = ({ onClick, onDeath }) => {
 
   useEffect(() => {
     if (currentHealth <= 0) {
-      onDeath(bossDataList[currentBossIndex].coinAmount);
       handleBossDeath();
     }
-  }, [currentBossIndex, currentHealth, onDeath]);
+  }, [currentHealth]);
 
   const handleClick = () => {
     if (currentHealth > 0) {
@@ -64,7 +58,6 @@ const Boss: React.FC<BossProps> = ({ onClick, onDeath }) => {
         }
         return newHealth;
       });
-      onClick();
 
       const bossElement = document.querySelector('.boss-image') as HTMLElement;
       if (bossElement) {
