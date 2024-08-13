@@ -61,7 +61,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
             <span className="text-purple-300 font-semibold">{userData.is_premium ? 'Yes' : 'No'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Premium Status:</span>
+            <span className="font-semibold text-blue-300">Attack Power:</span>
             <span className="text-purple-300 font-semibold">{userData.attack_power || 'N/A'}</span>
           </div>
         </div>
