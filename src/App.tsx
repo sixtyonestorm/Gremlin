@@ -42,38 +42,44 @@ const sendUserData = async (userData: UserData) => {
 function App() {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showGame, setShowGame] = useState(false);
-  const [activeComponent, setActiveComponent] = useState<string>('game');
+  const [showGame, setShowGame] = useState(false); // Oyun ekranını kontrol etmek için state ekleyelim
+  const [activeComponent, setActiveComponent] = useState<string>('game'); // default olarak 'game' bileşenini ayarla
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Simülasyon verisi oluşturma
-        const simulatedUserData: UserData = {
-          id: 123,
-          first_name: 'John',
-          last_name: 'Doe',
-          username: 'johndoe',
-          language_code: 'en',
-          is_premium: true,
-        };
-
-        setUserData(simulatedUserData);
-        // Kullanıcı verilerini sunucuya gönder
-        await sendUserData(simulatedUserData);
+        // WebApp SDK'dan kullanıcı verilerini al
+        const user = WebApp.initDataUnsafe?.user;
+        if (user) {
+          const userData: UserData = {
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name || '',
+            username: user.username || '',
+            language_code: user.language_code || '',
+            is_premium: user.is_premium || false,
+          };
+          setUserData(userData);
+          // Kullanıcı verilerini sunucuya gönder
+          await sendUserData(userData);
+        } else {
+          console.error("WebApp.initDataUnsafe mevcut değil veya kullanıcı verileri alınamadı.");
+        }
       } catch (error) {
         console.error("Kullanıcı verileri alınırken bir hata oluştu:", error);
       } finally {
+        // 5 saniye bekledikten sonra yüklenmeyi bitir ve oyun bileşenini göster
         setTimeout(() => {
           setLoading(false);
           setShowGame(true);
-        }, 5000);
+        }, 5000); // 5 saniye
       }
     };
 
     fetchUserData();
     console.log("WebApp.initDataUnsafe:", WebApp.initDataUnsafe);
 
+    // Ekranı tam ekran yap
     if (window.Telegram && window.Telegram.WebApp) {
       window.Telegram.WebApp.expand();
     }
