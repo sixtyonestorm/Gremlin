@@ -14,12 +14,12 @@ const Profile: React.FC = () => {
 
   const handleProfileClick = async () => {
     // Telegram WebApp'den kullanıcı bilgilerini al
-    const telegramUserId = window.Telegram.WebApp.initDataUnsafe.user?.id;
+    const UserId = window.Telegram.WebApp.initDataUnsafe.user?.id;
 
-    if (telegramUserId) {
+    if (UserId) {
       try {
         // Kullanıcı verilerini veritabanından çekmek için API çağrısı yapın
-        const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${telegramUserId}`);
+        const response = await fetch(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`);
         if (!response.ok) {
           throw new Error('User not found');
         }
