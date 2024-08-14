@@ -4,11 +4,11 @@ import { animatePopup } from './utils/popupanimations'; // Güncellenmiş yol
 interface RewardPopupProps {
   isVisible: boolean;
   onClose: () => void;
-  damage: number;
   coin: number;
+  experience: number;
 }
 
-const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, damage, coin }) => {
+const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, experience }) => {
   const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,10 +27,13 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, damage, c
       >
         <h2 className="text-xl font-bold text-white mb-4 text-center">Victory Achieved!</h2>
         <p className="text-base text-gray-200 mb-4 text-center">
-          Fantastic job! You've inflicted a total damage of <span className="font-semibold text-red-400 text-lg">{damage}</span> on the boss!
+          Congratulations! You've defeated the boss and earned rewards.
+        </p>
+        <p className="text-base text-gray-200 mb-4 text-center">
+          <span className="font-semibold text-yellow-300 text-lg">{coin}</span> coins!
         </p>
         <p className="text-base text-gray-200 mb-6 text-center">
-          As a reward, you've earned <span className="font-semibold text-yellow-300 text-lg">{coin}</span> coins!
+          <span className="font-semibold text-blue-300 text-lg">{experience}</span> experience points!
         </p>
         <div className="flex justify-center">
           <button
