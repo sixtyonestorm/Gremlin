@@ -17,7 +17,7 @@ const navItems = [
 
 const BottomNav: React.FC<BottomNavProps> = ({ currentPath, onNavItemClick }) => {
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-gradient-to-t from-green-600 via-green-700 to-green-800 text-white flex justify-around py-2 shadow-lg border-t-2 border-yellow-400 z-50 opacity-70">
+    <nav className="fixed bottom-0 left-0 w-full bg-gradient-to-t from-black via-gray-900 to-gray-800 text-white flex justify-around py-3 shadow-2xl border-t-4 border-yellow-500 z-50">
       {navItems.map(({ component, icon, label }) => (
         <button
           key={component}
@@ -27,13 +27,15 @@ const BottomNav: React.FC<BottomNavProps> = ({ currentPath, onNavItemClick }) =>
           }`}
         >
           <div
-            className={`p-2 rounded-full transition-all duration-300 ${
-              currentPath === component ? 'bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400' : 'bg-green-700 hover:bg-green-600'
+            className={`p-3 rounded-full transition-all duration-300 ${
+              currentPath === component
+                ? 'bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-400 shadow-lg'
+                : 'bg-gray-700 hover:bg-gray-600'
             }`}
           >
             {icon}
           </div>
-          <span className="text-xs mt-1">{label}</span>
+          <span className="text-xs mt-1 font-semibold">{label}</span>
         </button>
       ))}
     </nav>
