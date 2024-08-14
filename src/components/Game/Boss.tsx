@@ -1,29 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { animateBossClick } from './utils/bossanimations';
 import HealthBar from './HealthBar';
 import RewardPopup from './RewardPopup';
 import usePortalAnimation from './utils/portalAnimation';
-import gremlin1 from '../../../public/images/gremlin1.png';
-import gremlin2 from '../../../public/images/gremlin2.png';
-import gremlin3 from '../../../public/images/gremlin3.png';
 
 interface BossData {
-  id: number;
+  _id: string;
   name: string;
   health: number;
   imageSrc: string;
   coinAmount: number;
+  experienceAmount: number;
 }
 
-const bossDataList: BossData[] = [
-  { id: 1, name: 'Gremlin King', health: 200, imageSrc: gremlin1, coinAmount: 100 },
-  { id: 2, name: 'Dark Sorcerer', health: 300, imageSrc: gremlin2, coinAmount: 200 },
-  { id: 3, name: 'Shadow Beast', health: 150, imageSrc: gremlin3, coinAmount: 300 },
-];
-
 const Boss: React.FC = () => {
+  const [bossDataList, setBossDataList] = useState<BossData[]>([]);
   const [currentBossIndex, setCurrentBossIndex] = useState(0);
-  const [currentHealth, setCurrentHealth] = useState(bossDataList[currentBossIndex].health);
+  const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ damage: 0, coin: 0 });
 
@@ -35,8 +29,24 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
-    setCurrentHealth(bossDataList[currentBossIndex].health);
-  }, [currentBossIndex]);
+    const fetchBosses = async () => {
+      try {
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses'); // Adjust the URL as needed
+        setBossDataList(response.data);
+        setCurrentHealth(response.data[0]?.health || 0);
+      } catch (error) {
+        console.error('Error fetching bosses:', error);
+      }
+    };
+
+    fetchBosses();
+  }, []);
+
+  useEffect(() => {
+    if (bossDataList.length > 0) {
+      setCurrentHealth(bossDataList[currentBossIndex].health);
+    }
+  }, [currentBossIndex, bossDataList]);
 
   useEffect(() => {
     if (currentHealth <= 0) {
@@ -80,38 +90,42 @@ const Boss: React.FC = () => {
 
   return (
     <div className="relative flex flex-col items-center p-4">
-      <h2 className="text-xl font-semibold mb-2 text-white">
-        {bossDataList[currentBossIndex].name}
-      </h2>
-      <HealthBar hp={currentHealth} maxHp={bossDataList[currentBossIndex].health} />
-      <div className="relative flex justify-center items-center">
-        <div className="absolute flex items-center justify-center">
-          {/* Dış Halka */}
-          <div ref={outerCircleRef} className="absolute w-64 h-64 rounded-full bg-gradient-to-r from-green-700 via-teal-500 to-green-700 opacity-70 shadow-lg" style={{ zIndex: -1 }}></div>
-          {/* Orta Halka */}
-          <div ref={middleCircleRef} className="absolute w-52 h-52 rounded-full bg-gradient-to-r from-teal-500 via-lime-400 to-teal-500 opacity-60 shadow-lg" style={{ zIndex: -1 }}></div>
-          {/* İç Halka */}
-          <div ref={innerCircleRef} className="absolute w-40 h-40 rounded-full bg-gradient-to-r from-lime-400 via-yellow-300 to-lime-400 opacity-50 shadow-lg" style={{ zIndex: -1 }}></div>
-          {/* Merkez Işık */}
-          <div ref={centerLightRef} className="absolute w-24 h-24 rounded-full bg-gradient-to-r from-yellow-300 via-green-200 to-yellow-300 opacity-40 shadow-lg" style={{ zIndex: -1 }}></div>
-        </div>
+      {bossDataList.length > 0 && (
+        <>
+          <h2 className="text-xl font-semibold mb-2 text-white">
+            {bossDataList[currentBossIndex].name}
+          </h2>
+          <HealthBar hp={currentHealth} maxHp={bossDataList[currentBossIndex].health} />
+          <div className="relative flex justify-center items-center">
+            <div className="absolute flex items-center justify-center">
+              {/* Dış Halka */}
+              <div ref={outerCircleRef} className="absolute w-64 h-64 rounded-full bg-gradient-to-r from-green-700 via-teal-500 to-green-700 opacity-70 shadow-lg" style={{ zIndex: -1 }}></div>
+              {/* Orta Halka */}
+              <div ref={middleCircleRef} className="absolute w-52 h-52 rounded-full bg-gradient-to-r from-teal-500 via-lime-400 to-teal-500 opacity-60 shadow-lg" style={{ zIndex: -1 }}></div>
+              {/* İç Halka */}
+              <div ref={innerCircleRef} className="absolute w-40 h-40 rounded-full bg-gradient-to-r from-lime-400 via-yellow-300 to-lime-400 opacity-50 shadow-lg" style={{ zIndex: -1 }}></div>
+              {/* Merkez Işık */}
+              <div ref={centerLightRef} className="absolute w-24 h-24 rounded-full bg-gradient-to-r from-yellow-300 via-green-200 to-yellow-300 opacity-40 shadow-lg" style={{ zIndex: -1 }}></div>
+            </div>
 
-        <img
-          src={bossDataList[currentBossIndex].imageSrc}
-          alt={`Boss ${bossDataList[currentBossIndex].id}`}
-          width={280}
-          height={280}
-          className="cursor-pointer boss-image"
-          onClick={handleClick}
-        />
-      </div>
+            <img
+              src={bossDataList[currentBossIndex].imageSrc}
+              alt={`Boss ${bossDataList[currentBossIndex]._id}`}
+              width={280}
+              height={280}
+              className="cursor-pointer boss-image"
+              onClick={handleClick}
+            />
+          </div>
 
-      <RewardPopup
-        isVisible={isPopupVisible}
-        onClose={handlePopupClose}
-        damage={rewardData.damage}
-        coin={rewardData.coin}
-      />
+          <RewardPopup
+            isVisible={isPopupVisible}
+            onClose={handlePopupClose}
+            damage={rewardData.damage}
+            coin={rewardData.coin}
+          />
+        </>
+      )}
     </div>
   );
 };
