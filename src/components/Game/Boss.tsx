@@ -15,11 +15,21 @@ interface BossData {
   experienceAmount: number;
 }
 
-const Boss: React.FC = () => {
+interface UserData {
+  id: number;
+  level: number;
+  Experience: number;
+  attack_power: number;
+  mined_boss_coin: number;
+  total_mined_coin: number;
+}
+
+const Boss: React.FC<{ userId: number }> = ({ userId }) => {
   const [bossData, setBossData] = useState<BossData | null>(null);
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ damage: 0, coin: 0 });
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const {
     outerCircleRef,
@@ -49,15 +59,30 @@ const Boss: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Fetch user data
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
+        setUserData(response.data as UserData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+  useEffect(() => {
     if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
   }, [currentHealth, bossData]);
 
   const handleClick = () => {
-    if (currentHealth > 0 && bossData) {
+    if (currentHealth > 0 && bossData && userData) {
+      const damageDealt = userData.attack_power; // Calculate damage based on attack power
       setCurrentHealth(prevHealth => {
-        const newHealth = prevHealth - 10;
+        const newHealth = prevHealth - damageDealt;
         if (newHealth <= 0) {
           setCurrentHealth(0);
           setRewardData({
@@ -65,6 +90,8 @@ const Boss: React.FC = () => {
             coin: bossData.coinAmount,
           });
           setIsPopupVisible(true);
+          // Update user data after boss death
+          updateUserAfterBossDeath();
         }
         return newHealth;
       });
@@ -89,6 +116,25 @@ const Boss: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching new boss:', error);
+    }
+  };
+
+  const updateUserAfterBossDeath = async () => {
+    if (!userData || !bossData) return;
+
+    try {
+      // Calculate new user data
+      const updatedUserData = {
+        ...userData,
+        mined_boss_coin: (userData.mined_boss_coin || 0) + (bossData.coinAmount || 0),
+        Experience: (userData.Experience || 0) + (bossData.experienceAmount || 0),
+        total_mined_coin: (userData.total_mined_coin || 0) + (bossData.coinAmount || 0),
+      };
+
+      // Update user data
+      await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`, updatedUserData);
+    } catch (error) {
+      console.error('Error updating user data:', error);
     }
   };
 
