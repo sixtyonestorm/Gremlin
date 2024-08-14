@@ -21,6 +21,7 @@ const Boss: React.FC = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ coin: 0, experience: 0 });
   const [userId, setUserId] = useState<number | null>(null);
+  const [userAttackPower, setUserAttackPower] = useState<number>(0);
 
   const {
     outerCircleRef,
@@ -50,6 +51,31 @@ const Boss: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    // Fetch Telegram user ID
+    const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
+    if (telegramUser) {
+      setUserId(telegramUser.id);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Fetch user data and attack power once
+    const fetchUserData = async () => {
+      if (userId) {
+        try {
+          const userResponse = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
+          const userData = userResponse.data;
+          setUserAttackPower(userData.attack_power);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
+
+  useEffect(() => {
     if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
@@ -58,12 +84,7 @@ const Boss: React.FC = () => {
   const handleClick = async () => {
     if (currentHealth > 0 && bossData && userId) {
       try {
-        // Fetch user data
-        const userResponse = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
-        const userData = userResponse.data;
-
         // Calculate damage based on user's attack_power
-        const userAttackPower = userData.attack_power;
         setCurrentHealth(prevHealth => {
           const newHealth = prevHealth - userAttackPower;
           if (newHealth <= 0) {
@@ -73,14 +94,6 @@ const Boss: React.FC = () => {
               experience: bossData.experienceAmount,
             });
             setIsPopupVisible(true);
-
-            // Update user data with the rewards
-            axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`, {
-              mined_boss_coin: userData.mined_boss_coin + bossData.coinAmount,
-              total_exp: userData.total_exp + bossData.experienceAmount
-            }).catch(error => {
-              console.error('Error updating user data:', error);
-            });
           }
           return newHealth;
         });
@@ -90,13 +103,21 @@ const Boss: React.FC = () => {
           animateBossClick(bossElement);
         }
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error handling click:', error);
       }
     }
   };
 
   const handleBossDeath = async () => {
     try {
+      // Update user data with the rewards
+      if (userId) {
+        await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`, {
+          mined_boss_coin: (await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`)).data.mined_boss_coin + bossData?.coinAmount,
+          total_exp: (await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`)).data.total_exp + bossData?.experienceAmount
+        });
+      }
+
       // Fetch a new random boss from the API
       const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
       const bosses: BossData[] = response.data;
@@ -107,21 +128,13 @@ const Boss: React.FC = () => {
         setCurrentHealth(selectedBoss.health);
       }
     } catch (error) {
-      console.error('Error fetching new boss:', error);
+      console.error('Error handling boss death or fetching new boss:', error);
     }
   };
 
   const handlePopupClose = () => {
     setIsPopupVisible(false);
   };
-
-  useEffect(() => {
-    // Fetch Telegram user ID
-    const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
-    if (telegramUser) {
-      setUserId(telegramUser.id);
-    }
-  }, []);
 
   return (
     <div className="relative flex flex-col items-center p-4">
