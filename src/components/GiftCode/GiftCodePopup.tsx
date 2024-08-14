@@ -28,52 +28,72 @@ const GiftCodePopup: React.FC<GiftCodePopupProps> = ({ isVisible, onClose }) => 
     onClose(); // Kod gönderildikten sonra popup'ı kapat
   };
 
+  const openLink = (url: string) => {
+    window.open(url, '_blank');
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-40">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-50">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-4 rounded-lg shadow-2xl w-full max-w-xs"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-4 rounded-lg shadow-lg w-full max-w-sm"
       >
-        <h2 className="text-lg font-bold text-yellow-400 mb-3 text-center">
+        <h2 className="text-md font-bold text-yellow-300 mb-3 text-center">
           Enter Gift Code
         </h2>
 
-        {/* Kartlar */}
-        <div className="mb-4 space-y-4">
-          <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-700 p-3 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-white mb-2">Card 1</h3>
-            <p className="text-gray-200">Description for the first card goes here.</p>
+        <div className="mb-4 space-y-3">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => openLink('https://www.youtube.com/watch?v=frip8Ano1nA')}>
+            <img
+              src="https://img.youtube.com/vi/frip8Ano1nA/hqdefault.jpg"
+              alt="YouTube video preview"
+              className="w-20 h-20 object-cover rounded-lg"
+            />
+            <div className="text-gray-300">
+              <h3 className="text-sm font-semibold mb-1">Video Title 1</h3>
+              <p className="text-xs">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              </p>
+            </div>
           </div>
-          <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-700 p-3 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-white mb-2">Card 2</h3>
-            <p className="text-gray-200">Description for the second card goes here.</p>
+
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => openLink('https://www.youtube.com/watch?v=dQw4w9WgXcQ')}>
+            <img
+              src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+              alt="YouTube video preview"
+              className="w-20 h-20 object-cover rounded-lg"
+            />
+            <div className="text-gray-300">
+              <h3 className="text-sm font-semibold mb-1">Video Title 2</h3>
+              <p className="text-xs">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              </p>
+            </div>
           </div>
-          <div className="bg-gradient-to-r from-green-900 via-green-800 to-green-700 p-3 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-white mb-2">Card 3</h3>
-            <p className="text-gray-200">Description for the third card goes here.</p>
-          </div>
+
+          {/* More video previews can be added here */}
         </div>
 
-        <div className="mb-4">
+        <div className="mb-3">
           <input
             type="text"
             value={code}
             onChange={handleCodeChange}
-            placeholder="Enter code here"
-            className="w-full p-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            placeholder="Enter code"
+            className="w-full p-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 text-sm"
           />
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           <button
             onClick={handleSubmit}
-            className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-700 transition duration-300 ease-in-out text-sm"
+            className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-md shadow-md hover:from-yellow-500 hover:to-yellow-700 transition duration-200 ease-in-out text-xs"
           >
             Submit
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gradient-to-r from-red-400 to-red-600 text-white font-semibold rounded-lg shadow-lg hover:from-red-500 hover:to-red-700 transition duration-300 ease-in-out text-sm"
+            className="px-3 py-1 bg-gradient-to-r from-red-400 to-red-600 text-white font-semibold rounded-md shadow-md hover:from-red-500 hover:to-red-700 transition duration-200 ease-in-out text-xs"
           >
             Close
           </button>

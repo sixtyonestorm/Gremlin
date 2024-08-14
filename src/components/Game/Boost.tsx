@@ -21,10 +21,10 @@ const Boost: React.FC = () => {
       >
         {/* Boost simgesi */}
         <div className="relative rounded-full p-2 transition-transform transform hover:scale-110 hover:cursor-pointer">
-          <img src={profileWebp} alt="Boost" className="w-11 h-11" /> {/* WebP'yi img etiketi ile kullan */}
+          <img src={profileWebp} alt="Boost" className="w-9 h-9" /> {/* WebP'yi img etiketi ile kullan */}
         </div>
-        <span className="text-white text-xs font-bold mt-[2px] text-shadow-md">Supercharge</span> {/* Boost adı */}
-        </div>
+        <span className="text-white text-xs font-bold mt-[-2px] text-shadow-md">Supercharge</span> {/* Boost adı */}
+      </div>
 
       {/* BoostPopup açıldığında görünür */}
       {isPopupVisible && (
