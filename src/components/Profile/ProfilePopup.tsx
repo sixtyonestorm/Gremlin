@@ -10,7 +10,7 @@ interface UserData {
   is_premium?: boolean;
   attack_power: number | undefined;
   level: number | undefined;
-  Experience: number | undefined;
+  total_exp: number | undefined;
   mined_boss_coin: number | undefined;
   mined_mining_coin: number | undefined;
   mined_quests_coin: number | undefined;
@@ -58,7 +58,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">XP:</span>
-            <span className="text-yellow-300 font-semibold">{userData.Experience || 'N/A'}</span>
+            <span className="text-yellow-300 font-semibold">{userData.total_exp || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Power:</span>
