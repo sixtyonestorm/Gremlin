@@ -38,31 +38,71 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-black bg-opacity-70">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-2 bg-black bg-opacity-70">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-900 to-green-700 p-4 rounded-lg shadow-lg w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl border border-yellow-500"
+        className="bg-gradient-to-br from-green-900 to-green-700 p-3 rounded-lg shadow-lg w-full max-w-xs border border-yellow-500"
       >
-        <h2 className="text-xl font-bold text-yellow-400 mb-4 text-center">Player Stats</h2>
-        <ul className="space-y-2">
-          {Object.entries(userData).map(([key, value]) => {
-            const label = key.replace(/_/g, ' ').toUpperCase();
-            const displayValue = value !== undefined ? value : 'N/A';
-            const valueColor = key.includes('coin') || key.includes('power') ? 'text-purple-300' : 'text-yellow-300';
-
-            return (
-              <li key={key} className="bg-green-800 p-3 rounded text-sm text-gray-200">
-                <div className="flex justify-between items-center">
-                  <span className="text-blue-300 font-medium">{label}:</span>
-                  <span className={`font-semibold ${valueColor}`}>{displayValue}</span>
-                </div>
-              </li>
-            );
-          })}
+        <h2 className="text-lg font-bold text-yellow-400 mb-2 text-center">Player Stats</h2>
+        <ul className="space-y-1">
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Username:</span>
+              <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Level:</span>
+              <span className="text-yellow-300 font-semibold">{userData.level || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">XP:</span>
+              <span className="text-yellow-300 font-semibold">{userData.total_exp || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Power:</span>
+              <span className="text-purple-300 font-semibold">{userData.attack_power || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Boss Coins:</span>
+              <span className="text-purple-300 font-semibold">{userData.mined_boss_coin || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Quests:</span>
+              <span className="text-purple-300 font-semibold">{userData.mined_quests_coin || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Dungeon:</span>
+              <span className="text-purple-300 font-semibold">{userData.mined_dungeon_coin || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Referral:</span>
+              <span className="text-purple-300 font-semibold">{userData.mined_ref_coin || 'N/A'}</span>
+            </div>
+          </li>
+          <li className="bg-green-800 p-2 rounded text-xs text-gray-200">
+            <div className="flex justify-between items-center">
+              <span className="text-blue-300">Total:</span>
+              <span className="text-purple-300 font-semibold">{userData.total_mined_coin || 'N/A'}</span>
+            </div>
+          </li>
         </ul>
         <button
           onClick={onClose}
-          className="w-full mt-4 py-2 bg-red-600 text-white text-sm font-bold rounded hover:bg-red-700 transition-colors duration-200"
+          className="w-full mt-2 py-1 bg-red-600 text-white text-sm font-bold rounded hover:bg-red-700 transition-colors duration-200"
         >
           Close
         </button>
