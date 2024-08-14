@@ -15,11 +15,19 @@ interface BossData {
   experienceAmount: number;
 }
 
+interface UserData {
+  id: string;
+  attack_power: number;
+  mined_boss_coin: number;
+  Experience: number;
+}
+
 const Boss: React.FC = () => {
   const [bossData, setBossData] = useState<BossData | null>(null);
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ coin: 0, experience: 0 });
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const {
     outerCircleRef,
@@ -29,11 +37,25 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
+    // Fetch user data
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get<UserData>('https://greserver-b4a1eced30d9.herokuapp.com/api/user'); // Update with actual user ID
+        setUserData(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
     // Fetch a random boss from the API
     const fetchRandomBoss = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
-        const bosses: BossData[] = response.data;
+        const response = await axios.get<BossData[]>('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
+        const bosses = response.data;
         if (bosses.length > 0) {
           const randomIndex = Math.floor(Math.random() * bosses.length);
           const selectedBoss = bosses[randomIndex];
@@ -54,22 +76,31 @@ const Boss: React.FC = () => {
     }
   }, [currentHealth, bossData]);
 
-  const handleClick = () => {
-    if (currentHealth > 0 && bossData) {
-      // Calculate damage based on attack_power (This part needs to be implemented)
-      const userAttackPower = 10; // Example attack power, replace with actual value
-      setCurrentHealth(prevHealth => {
-        const newHealth = prevHealth - userAttackPower;
-        if (newHealth <= 0) {
-          setCurrentHealth(0);
-          setRewardData({
-            coin: bossData.coinAmount,
-            experience: bossData.experienceAmount,
+  const handleClick = async () => {
+    if (currentHealth > 0 && bossData && userData) {
+      const { attack_power } = userData;
+      const newHealth = currentHealth - attack_power;
+
+      if (newHealth <= 0) {
+        setCurrentHealth(0);
+        setRewardData({
+          coin: bossData.coinAmount,
+          experience: bossData.experienceAmount,
+        });
+        setIsPopupVisible(true);
+
+        // Update user data with rewards
+        try {
+          await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userData.id}`, {
+            mined_boss_coin: userData.mined_boss_coin + bossData.coinAmount,
+            Experience: userData.Experience + bossData.experienceAmount,
           });
-          setIsPopupVisible(true);
+        } catch (error) {
+          console.error('Error updating user data:', error);
         }
-        return newHealth;
-      });
+      } else {
+        setCurrentHealth(newHealth);
+      }
 
       const bossElement = document.querySelector('.boss-image') as HTMLElement;
       if (bossElement) {
@@ -81,8 +112,8 @@ const Boss: React.FC = () => {
   const handleBossDeath = async () => {
     try {
       // Fetch a new random boss from the API
-      const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
-      const bosses: BossData[] = response.data;
+      const response = await axios.get<BossData[]>('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
+      const bosses = response.data;
       if (bosses.length > 0) {
         const randomIndex = Math.floor(Math.random() * bosses.length);
         const selectedBoss = bosses[randomIndex];
