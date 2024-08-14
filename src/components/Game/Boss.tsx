@@ -20,7 +20,7 @@ const Boss: React.FC = () => {
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ coin: 0, experience: 0 });
-  const [userAttackPower, setUserAttackPower] = useState(10); // Default attack power
+  const [userId, setUserId] = useState<number | null>(null);
 
   const {
     outerCircleRef,
@@ -50,67 +50,53 @@ const Boss: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Fetch user data from the API
-        const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
-        if (telegramUser) {
-          const UserId = telegramUser.id;
-          const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`);
-          const userData = response.data;
-          setUserAttackPower(userData.attack_power);
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
     if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
   }, [currentHealth, bossData]);
 
-  const handleClick = () => {
-    if (currentHealth > 0 && bossData) {
-      // Calculate damage based on attack_power
-      setCurrentHealth(prevHealth => {
-        const newHealth = prevHealth - userAttackPower;
-        if (newHealth <= 0) {
-          setCurrentHealth(0);
-          setRewardData({
-            coin: bossData.coinAmount,
-            experience: bossData.experienceAmount,
-          });
-          setIsPopupVisible(true);
-        }
-        return newHealth;
-      });
+  const handleClick = async () => {
+    if (currentHealth > 0 && bossData && userId) {
+      try {
+        // Fetch user data
+        const userResponse = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
+        const userData = userResponse.data;
 
-      const bossElement = document.querySelector('.boss-image') as HTMLElement;
-      if (bossElement) {
-        animateBossClick(bossElement);
+        // Calculate damage based on user's attack_power
+        const userAttackPower = userData.attack_power;
+        setCurrentHealth(prevHealth => {
+          const newHealth = prevHealth - userAttackPower;
+          if (newHealth <= 0) {
+            setCurrentHealth(0);
+            setRewardData({
+              coin: bossData.coinAmount,
+              experience: bossData.experienceAmount,
+            });
+            setIsPopupVisible(true);
+
+            // Update user data with the rewards
+            axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`, {
+              mined_boss_coin: userData.mined_boss_coin + bossData.coinAmount,
+              total_exp: userData.total_exp + bossData.experienceAmount
+            }).catch(error => {
+              console.error('Error updating user data:', error);
+            });
+          }
+          return newHealth;
+        });
+
+        const bossElement = document.querySelector('.boss-image') as HTMLElement;
+        if (bossElement) {
+          animateBossClick(bossElement);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
     }
   };
 
   const handleBossDeath = async () => {
     try {
-      // Update user data with the rewards
-      const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
-      if (telegramUser) {
-        const UserId = telegramUser.id;
-        await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`, {
-          $inc: {
-            mined_boss_coin: rewardData.coin,
-            Experience: rewardData.experience
-          }
-        });
-      }
-
       // Fetch a new random boss from the API
       const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
       const bosses: BossData[] = response.data;
@@ -121,13 +107,21 @@ const Boss: React.FC = () => {
         setCurrentHealth(selectedBoss.health);
       }
     } catch (error) {
-      console.error('Error updating user data or fetching new boss:', error);
+      console.error('Error fetching new boss:', error);
     }
   };
 
   const handlePopupClose = () => {
     setIsPopupVisible(false);
   };
+
+  useEffect(() => {
+    // Fetch Telegram user ID
+    const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
+    if (telegramUser) {
+      setUserId(telegramUser.id);
+    }
+  }, []);
 
   return (
     <div className="relative flex flex-col items-center p-4">
