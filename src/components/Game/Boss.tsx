@@ -3,9 +3,9 @@ import { animateBossClick } from './utils/bossanimations';
 import HealthBar from './HealthBar';
 import RewardPopup from './RewardPopup';
 import usePortalAnimation from './utils/portalAnimation';
-import gremlin1 from './images/gremlin1.png';
-import gremlin2 from './images/gremlin2.png';
-import gremlin3 from './images/gremlin3.png';
+import gremlin1 from '../../../public/images/gremlin1.png';
+import gremlin2 from '../../../public/images/gremlin2.png';
+import gremlin3 from '../../../public/images/gremlin3.png';
 
 interface BossData {
   id: number;
