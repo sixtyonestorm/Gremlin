@@ -23,7 +23,12 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-60">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-6 rounded-full shadow-lg max-w-xs w-full border border-green-500"
+        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-6 border border-green-500"
+        style={{
+          width: '300px',
+          height: '200px',
+          borderRadius: '150px / 100px', // Elliptical border radius
+        }}
       >
         <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
           Victory!
