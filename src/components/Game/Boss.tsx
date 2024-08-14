@@ -29,19 +29,23 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
-    // Fetch boss data from API when component mounts
-    const fetchBoss = async () => {
+    // Fetch a random boss from the API
+    const fetchRandomBoss = async () => {
       try {
-        const bossId = '66bcd72f4fc9400f4aa0a3e7'; // Example boss ID, replace with actual ID
-        const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/bosses/${bossId}`);
-        setBossData(response.data);
-        setCurrentHealth(response.data.health);
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
+        const bosses: BossData[] = response.data;
+        if (bosses.length > 0) {
+          const randomIndex = Math.floor(Math.random() * bosses.length);
+          const selectedBoss = bosses[randomIndex];
+          setBossData(selectedBoss);
+          setCurrentHealth(selectedBoss.health);
+        }
       } catch (error) {
-        console.error('Error fetching boss data:', error);
+        console.error('Error fetching bosses:', error);
       }
     };
 
-    fetchBoss();
+    fetchRandomBoss();
   }, []);
 
   useEffect(() => {
@@ -72,8 +76,20 @@ const Boss: React.FC = () => {
     }
   };
 
-  const handleBossDeath = () => {
-    // Handle boss death (e.g., load next boss)
+  const handleBossDeath = async () => {
+    try {
+      // Fetch a new random boss from the API
+      const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
+      const bosses: BossData[] = response.data;
+      if (bosses.length > 0) {
+        const randomIndex = Math.floor(Math.random() * bosses.length);
+        const selectedBoss = bosses[randomIndex];
+        setBossData(selectedBoss);
+        setCurrentHealth(selectedBoss.health);
+      }
+    } catch (error) {
+      console.error('Error fetching new boss:', error);
+    }
   };
 
   const handlePopupClose = () => {
