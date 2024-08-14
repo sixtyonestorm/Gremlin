@@ -23,11 +23,11 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-60">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-6 border border-green-500"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-6 border border-green-600 shadow-lg"
         style={{
-          width: '300px',
-          height: '200px',
-          borderRadius: '150px / 100px', // Elliptical border radius
+          width: '320px',
+          height: '180px',
+          borderRadius: '160px / 90px', // Soft ellipse shape
         }}
       >
         <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
@@ -42,10 +42,10 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
         <p className="text-lg text-gray-300 mb-4 text-center">
           <span className="font-semibold text-blue-400 text-2xl">{experience}</span> XP
         </p>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-full shadow-md hover:from-yellow-500 hover:to-yellow-700 transition duration-200 ease-in"
+            className="px-6 py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-500 transition duration-300 ease-in-out"
           >
             Close
           </button>
