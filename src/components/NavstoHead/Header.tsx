@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-green-900 text-white py-2 z-50 shadow-md">
+    <header className="fixed top-0 left-0 w-full bg-green-900 text-white py-2 z-50 shadow-md opacity-70">
       {/* Duyuru Marquesi */}
       <div className="relative py-1 border-b-2 border-yellow-400">
         <div className="overflow-hidden whitespace-nowrap">
