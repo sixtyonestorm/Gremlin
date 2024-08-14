@@ -29,6 +29,7 @@ const Boss: React.FC<{ userId: number }> = ({ userId }) => {
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ damage: 0, coin: 0 });
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const {
     outerCircleRef,
@@ -54,8 +55,19 @@ const Boss: React.FC<{ userId: number }> = ({ userId }) => {
       }
     };
 
+    // Fetch user data
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
+        setUserData(response.data as UserData);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     fetchRandomBoss();
-  }, []);
+    fetchUserData();
+  }, [userId]);
 
   useEffect(() => {
     if (bossData && currentHealth <= 0) {
@@ -64,9 +76,10 @@ const Boss: React.FC<{ userId: number }> = ({ userId }) => {
   }, [currentHealth, bossData]);
 
   const handleClick = () => {
-    if (currentHealth > 0 && bossData) {
+    if (currentHealth > 0 && bossData && userData) {
+      const damage = userData.attack_power; // Use attack_power for damage
       setCurrentHealth(prevHealth => {
-        const newHealth = prevHealth - 10;
+        const newHealth = prevHealth - damage;
         if (newHealth <= 0) {
           setCurrentHealth(0);
           setRewardData({
@@ -105,16 +118,13 @@ const Boss: React.FC<{ userId: number }> = ({ userId }) => {
 
   const updateUserAfterBossDeath = async () => {
     try {
-      // Fetch user data
-      const userResponse = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
-      const user = userResponse.data as UserData;
-      if (user) {
+      if (userData && bossData) {
         // Calculate new user data
         const updatedUserData = {
-          ...user,
-          mined_boss_coin: (user.mined_boss_coin || 0) + (bossData?.coinAmount || 0),
-          Experience: (user.Experience || 0) + (bossData?.experienceAmount || 0),
-          total_mined_coin: (user.total_mined_coin || 0) + (bossData?.coinAmount || 0),
+          ...userData,
+          mined_boss_coin: (userData.mined_boss_coin || 0) + (bossData.coinAmount || 0),
+          Experience: (userData.Experience || 0) + (bossData.experienceAmount || 0),
+          total_mined_coin: (userData.total_mined_coin || 0) + (bossData.coinAmount || 0),
         };
 
         // Update user data
