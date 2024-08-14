@@ -20,10 +20,10 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-70">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-black bg-opacity-70">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-900 via-green-800 to-green-700 p-4 rounded-lg border-2 border-yellow-500 max-w-xs w-full shadow-lg"
+        className="bg-gradient-to-br from-green-900 via-green-800 to-green-700 p-4 rounded-lg border-2 border-yellow-500 max-w-xs w-full shadow-lg z-[10000]"
       >
         <h2 className="text-2xl font-bold text-yellow-400 mb-2 text-center animate-pulse">
           Victory is yours!
