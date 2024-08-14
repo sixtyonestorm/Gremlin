@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import GiftCodePopup from './GiftCodePopup'; // GiftCodePopup bileşenini import ettik
-import giftWebp from '../../icons/giftbox.webp'; // Aynı WebP dosyasını kullanabilirsiniz veya uygun bir dosya ekleyin
+import GiftCodePopup from './GiftCodePopup'; // GiftCodePopup component
+import giftWebp from '../../icons/giftbox.webp'; // Import the giftbox image
 
 const GiftKey: React.FC = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -17,16 +17,16 @@ const GiftKey: React.FC = () => {
     <div className="relative">
       <div
         className="fixed top-[135px] right-4 flex flex-col items-center cursor-pointer z-50"
-        onClick={handleGiftKeyClick} // Hediye kodu bileşenine tıklandığında popup görünür
+        onClick={handleGiftKeyClick} // Show popup on click
       >
-        {/* Hediye kodu simgesi */}
-        <div className="relative rounded-full p-2 transition-transform transform hover:scale-110 hover:cursor-pointer">
-          <img src={giftWebp} alt="Gift Key" className="w-12 h-12" /> {/* WebP'yi img etiketi ile kullan */}
+        {/* Gift icon with styling similar to BoostPopup */}
+        <div className="relative rounded-full p-2 transition-transform transform hover:scale-110 hover:cursor-pointer bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-lg">
+          <img src={giftWebp} alt="Gift Key" className="w-12 h-12" />
         </div>
-        <span className="text-white text-xs font-bold mt-[-3px] text-shadow-md">SurpriseBox</span> {/* Hediye kodu adı */}
+        <span className="text-yellow-400 text-xs font-bold mt-1">SurpriseBox</span>
       </div>
 
-      {/* GiftCodePopup açıldığında görünür */}
+      {/* Render GiftCodePopup when visible */}
       {isPopupVisible && (
         <GiftCodePopup isVisible={isPopupVisible} onClose={handlePopupClose} />
       )}
