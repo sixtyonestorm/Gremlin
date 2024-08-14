@@ -110,12 +110,12 @@ const Boss: React.FC = () => {
 
   const handleBossDeath = async () => {
     try {
-      // Kullanıcı verilerini tekrar kontrol et
       if (userId) {
+        // Kullanıcının güncel verilerini tekrar al
         const userResponse = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
         const userData = userResponse.data;
 
-        // Kullanıcının attack_power değerinin aynı olup olmadığını kontrol et
+        // Eğer attack_power değişmişse, yeni değeri güncelle
         if (userData.attack_power !== userAttackPower) {
           console.warn('Attack power has changed. Updating...');
           setUserAttackPower(userData.attack_power);
@@ -126,16 +126,16 @@ const Boss: React.FC = () => {
           mined_boss_coin: userData.mined_boss_coin + (bossData?.coinAmount || 0),
           total_exp: userData.total_exp + (bossData?.experienceAmount || 0)
         });
-      }
 
-      // Fetch a new random boss from the API
-      const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
-      const bosses: BossData[] = response.data;
-      if (bosses.length > 0) {
-        const randomIndex = Math.floor(Math.random() * bosses.length);
-        const selectedBoss = bosses[randomIndex];
-        setBossData(selectedBoss);
-        setCurrentHealth(selectedBoss.health);
+        // Yeni bir rastgele boss al
+        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
+        const bosses: BossData[] = response.data;
+        if (bosses.length > 0) {
+          const randomIndex = Math.floor(Math.random() * bosses.length);
+          const selectedBoss = bosses[randomIndex];
+          setBossData(selectedBoss);
+          setCurrentHealth(selectedBoss.health);
+        }
       }
     } catch (error) {
       console.error('Error handling boss death or fetching new boss:', error);
