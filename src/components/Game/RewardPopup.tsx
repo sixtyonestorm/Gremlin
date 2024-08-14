@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { animatePopup } from './utils/popupanimations'; // Updated path
+import { animatePopup } from './utils/popupanimations'; // Güncellenmiş yol
 
 interface RewardPopupProps {
   isVisible: boolean;
@@ -23,37 +23,28 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-60">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black border border-green-600 shadow-lg flex flex-col items-center justify-center"
-        style={{
-          width: '180px', // Reduced width and height
-          height: '180px',
-          borderRadius: '50%', // Perfect circle
-          padding: '10px', // Reduced padding
-        }}
+        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-4 rounded-lg shadow-lg max-w-xs w-full border border-green-500"
       >
-        <h2 className="text-lg font-extrabold text-white mb-1 text-center">
+        <h2 className="text-xl font-bold text-white mb-2 text-center">
           Victory!
         </h2>
-        <p className="text-sm text-gray-300 mb-1 text-center">
+        <p className="text-md text-gray-300 mb-2 text-center">
           You defeated the boss!
         </p>
-        <p className="text-sm text-gray-300 mb-1 text-center">
-          <span className="font-semibold text-yellow-400 text-xl">{coin}</span> coins
+        <p className="text-md text-gray-300 mb-2 text-center">
+          <span className="font-semibold text-yellow-400">{coin}</span> coins
         </p>
-        <p className="text-sm text-gray-300 mb-3 text-center">
-          <span className="font-semibold text-blue-400 text-xl">{experience}</span> XP
+        <p className="text-md text-gray-300 mb-4 text-center">
+          <span className="font-semibold text-blue-400">{experience}</span> XP
         </p>
-        <button
-          onClick={onClose}
-          className="px-3 py-1 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-md hover:bg-yellow-400 transition duration-300 ease-in-out"
-          style={{
-            width: '100px', // Reduced width for the button
-            height: '30px',
-            borderRadius: '15px', // More rounded button
-          }}
-        >
-          Close
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={onClose}
+            className="px-4 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-full shadow-md hover:from-yellow-500 hover:to-yellow-700 transition duration-200 ease-in"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
