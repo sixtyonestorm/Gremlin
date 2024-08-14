@@ -23,14 +23,14 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-60">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-6 border border-green-600 shadow-lg"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-6 border border-green-600 shadow-lg flex flex-col items-center justify-center"
         style={{
-          width: '320px',
-          height: '180px',
-          borderRadius: '160px / 90px', // Soft ellipse shape
+          width: '200px', // Width and height are the same for a perfect circle
+          height: '200px',
+          borderRadius: '50%', // Perfect circle
         }}
       >
-        <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
+        <h2 className="text-2xl font-extrabold text-white mb-2 text-center">
           Victory!
         </h2>
         <p className="text-lg text-gray-300 mb-2 text-center">
@@ -42,14 +42,17 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
         <p className="text-lg text-gray-300 mb-4 text-center">
           <span className="font-semibold text-blue-400 text-2xl">{experience}</span> XP
         </p>
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={onClose}
-            className="px-6 py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-500 transition duration-300 ease-in-out"
-          >
-            Close
-          </button>
-        </div>
+        <button
+          onClick={onClose}
+          className="px-4 py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-400 transition duration-300 ease-in-out"
+          style={{
+            width: '120px', // Adjust width and height for button
+            height: '40px',
+            borderRadius: '20px', // Rounded button
+          }}
+        >
+          Close
+        </button>
       </div>
     </div>
   );
