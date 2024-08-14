@@ -41,7 +41,7 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
           </span>
           <span className="font-semibold text-yellow-400">+{coin}</span>
         </div>
-        <div className="flex justify-between items-center mb-4 bg-gray-800 p-2 rounded">
+        <div className="flex justify-between items-center mb-4 bg-green-800 p-2 rounded">
           <span className="text-blue-400 flex items-center">
             <svg className="w-4 h-4 mr-1 fill-current" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
