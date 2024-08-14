@@ -15,19 +15,11 @@ interface BossData {
   experienceAmount: number;
 }
 
-interface UserData {
-  attack_power: number;
-  Experience: number;
-  mined_boss_coin: number;
-}
-
 const Boss: React.FC = () => {
   const [bossData, setBossData] = useState<BossData | null>(null);
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ coin: 0, experience: 0 });
-  const [userId, setUserId] = useState<number | null>(null);
-  const [userData, setUserData] = useState<UserData | null>(null);
 
   const {
     outerCircleRef,
@@ -37,36 +29,7 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
-    // Kullanıcı ID'sini almak için uygun API çağrısı veya yöntem
-    const fetchUserId = () => {
-      // Örneğin: Kullanıcı ID'sini localStorage'dan al
-      const id = localStorage.getItem('userId'); // Örnek
-      if (id) {
-        setUserId(Number(id));
-      }
-    };
-
-    fetchUserId();
-  }, []);
-
-  useEffect(() => {
-    if (userId) {
-      // Kullanıcı verilerini al
-      const fetchUserData = async () => {
-        try {
-          const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`);
-          setUserData(response.data);
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-        }
-      };
-
-      fetchUserData();
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    // Rastgele bir boss getir
+    // Fetch a random boss from the API
     const fetchRandomBoss = async () => {
       try {
         const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
@@ -91,9 +54,10 @@ const Boss: React.FC = () => {
     }
   }, [currentHealth, bossData]);
 
-  const handleClick = async () => {
-    if (currentHealth > 0 && bossData && userData) {
-      const userAttackPower = userData.attack_power;
+  const handleClick = () => {
+    if (currentHealth > 0 && bossData) {
+      // Calculate damage based on attack_power (This part needs to be implemented)
+      const userAttackPower = 10; // Example attack power, replace with actual value
       setCurrentHealth(prevHealth => {
         const newHealth = prevHealth - userAttackPower;
         if (newHealth <= 0) {
@@ -103,20 +67,6 @@ const Boss: React.FC = () => {
             experience: bossData.experienceAmount,
           });
           setIsPopupVisible(true);
-
-          // Kullanıcı verilerini güncelle
-          const updateUser = async () => {
-            try {
-              await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${userId}`, {
-                Experience: userData.Experience + bossData.experienceAmount,
-                mined_boss_coin: userData.mined_boss_coin + bossData.coinAmount,
-              });
-            } catch (error) {
-              console.error('Error updating user data:', error);
-            }
-          };
-
-          updateUser();
         }
         return newHealth;
       });
@@ -130,7 +80,7 @@ const Boss: React.FC = () => {
 
   const handleBossDeath = async () => {
     try {
-      // Yeni bir boss getir
+      // Fetch a new random boss from the API
       const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
       const bosses: BossData[] = response.data;
       if (bosses.length > 0) {
