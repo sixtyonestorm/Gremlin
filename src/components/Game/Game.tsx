@@ -21,7 +21,7 @@ const Game: React.FC = () => {
       <Level />
 
       {/* Boss component */}
-      <Boss userId={''}/>
+      <Boss/>
     </div>
   );
 };
