@@ -6,8 +6,6 @@ body {
   @apply bg-gradient-to-b from-green-900 via-green-800 to-black;
   background-size: 200% 200%;
   animation: gradientShift 20s ease infinite;
-  position: relative;
-  overflow: hidden;
 }
 
 body::before {
