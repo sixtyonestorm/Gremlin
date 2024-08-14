@@ -53,7 +53,7 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
             <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="font-semibold text-blue-300">Rank:</span>
+            <span className="font-semibold text-blue-300">Level:</span>
             <span className="text-yellow-300 font-semibold">{userData.level || 'N/A'}</span>
           </div>
           <div className="flex justify-between items-center">
