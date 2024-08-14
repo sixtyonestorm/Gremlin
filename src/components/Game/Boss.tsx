@@ -79,6 +79,7 @@ const Boss: React.FC = () => {
     if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentHealth, bossData]);
 
   const handleClick = async () => {
