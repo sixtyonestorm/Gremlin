@@ -23,32 +23,33 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-60">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-6 border border-green-600 shadow-lg flex flex-col items-center justify-center"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black border border-green-600 shadow-lg flex flex-col items-center justify-center"
         style={{
-          width: '200px', // Width and height are the same for a perfect circle
-          height: '200px',
+          width: '180px', // Reduced width and height
+          height: '180px',
           borderRadius: '50%', // Perfect circle
+          padding: '10px', // Reduced padding
         }}
       >
-        <h2 className="text-2xl font-extrabold text-white mb-2 text-center">
+        <h2 className="text-lg font-extrabold text-white mb-1 text-center">
           Victory!
         </h2>
-        <p className="text-lg text-gray-300 mb-2 text-center">
+        <p className="text-sm text-gray-300 mb-1 text-center">
           You defeated the boss!
         </p>
-        <p className="text-lg text-gray-300 mb-2 text-center">
-          <span className="font-semibold text-yellow-400 text-2xl">{coin}</span> coins
+        <p className="text-sm text-gray-300 mb-1 text-center">
+          <span className="font-semibold text-yellow-400 text-xl">{coin}</span> coins
         </p>
-        <p className="text-lg text-gray-300 mb-4 text-center">
-          <span className="font-semibold text-blue-400 text-2xl">{experience}</span> XP
+        <p className="text-sm text-gray-300 mb-3 text-center">
+          <span className="font-semibold text-blue-400 text-xl">{experience}</span> XP
         </p>
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-lg hover:bg-yellow-400 transition duration-300 ease-in-out"
+          className="px-3 py-1 bg-gradient-to-r from-yellow-300 via-yellow-400 to-yellow-500 text-black font-semibold rounded-full shadow-md hover:bg-yellow-400 transition duration-300 ease-in-out"
           style={{
-            width: '120px', // Adjust width and height for button
-            height: '40px',
-            borderRadius: '20px', // Rounded button
+            width: '100px', // Reduced width for the button
+            height: '30px',
+            borderRadius: '15px', // More rounded button
           }}
         >
           Close
