@@ -33,27 +33,23 @@ const GiftCodePopup: React.FC<GiftCodePopupProps> = ({ isVisible, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-black bg-opacity-70">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-4 rounded-lg shadow-lg w-full max-w-sm"
+        className="bg-gradient-to-br from-green-900 to-green-700 p-4 rounded-lg shadow-lg w-full max-w-xs border border-yellow-500"
       >
-        <h2 className="text-md font-bold text-yellow-300 mb-3 text-center">
-          Enter Gift Code
-        </h2>
+        <h2 className="text-lg font-bold text-yellow-400 mb-2 text-center">Enter Gift Code</h2>
 
-        <div className="mb-4 space-y-3">
+        <div className="mb-4 space-y-2">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => openLink('https://www.youtube.com/watch?v=frip8Ano1nA')}>
             <img
               src="https://img.youtube.com/vi/frip8Ano1nA/hqdefault.jpg"
               alt="YouTube video preview"
-              className="w-20 h-20 object-cover rounded-lg"
+              className="w-16 h-16 object-cover rounded-lg"
             />
-            <div className="text-gray-300">
-              <h3 className="text-sm font-semibold mb-1">Video Title 1</h3>
-              <p className="text-xs">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-              </p>
+            <div className="text-gray-200 text-xs">
+              <h3 className="font-semibold">Video Title 1</h3>
+              <p className="text-xs">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
           </div>
 
@@ -61,13 +57,11 @@ const GiftCodePopup: React.FC<GiftCodePopupProps> = ({ isVisible, onClose }) => 
             <img
               src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
               alt="YouTube video preview"
-              className="w-20 h-20 object-cover rounded-lg"
+              className="w-16 h-16 object-cover rounded-lg"
             />
-            <div className="text-gray-300">
-              <h3 className="text-sm font-semibold mb-1">Video Title 2</h3>
-              <p className="text-xs">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-              </p>
+            <div className="text-gray-200 text-xs">
+              <h3 className="font-semibold">Video Title 2</h3>
+              <p className="text-xs">Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
             </div>
           </div>
 
@@ -80,20 +74,20 @@ const GiftCodePopup: React.FC<GiftCodePopupProps> = ({ isVisible, onClose }) => 
             value={code}
             onChange={handleCodeChange}
             placeholder="Enter code"
-            className="w-full p-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 text-sm"
+            className="w-full p-2 bg-gray-800 text-gray-200 border border-yellow-500 rounded-md focus:outline-none focus:ring-1 focus:ring-yellow-500 text-sm"
           />
         </div>
 
-        <div className="flex justify-between gap-2">
+        <div className="flex justify-center mt-2">
           <button
             onClick={handleSubmit}
-            className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-md shadow-md hover:from-yellow-500 hover:to-yellow-700 transition duration-200 ease-in-out text-xs"
+            className="px-4 py-1 bg-yellow-600 text-black font-semibold rounded-lg shadow-md hover:bg-yellow-700 transition duration-200 ease-in text-sm"
           >
             Submit
           </button>
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-gradient-to-r from-red-400 to-red-600 text-white font-semibold rounded-md shadow-md hover:from-red-500 hover:to-red-700 transition duration-200 ease-in-out text-xs"
+            className="ml-2 px-4 py-1 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-200 ease-in text-sm"
           >
             Close
           </button>
@@ -101,6 +95,6 @@ const GiftCodePopup: React.FC<GiftCodePopupProps> = ({ isVisible, onClose }) => 
       </div>
     </div>
   );
-}
+};
 
 export default GiftCodePopup;
