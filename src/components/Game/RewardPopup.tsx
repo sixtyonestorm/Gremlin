@@ -20,27 +20,29 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-800 bg-opacity-70">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-4 rounded-lg shadow-lg max-w-xs w-full"
+        className="bg-gradient-to-br from-green-900 via-green-800 to-black p-6 rounded-lg shadow-2xl max-w-sm w-full border border-green-600"
       >
-        <h2 className="text-xl font-bold text-white mb-4 text-center">Victory Achieved!</h2>
-        <p className="text-base text-gray-200 mb-4 text-center">
+        <h2 className="text-2xl font-extrabold text-white mb-4 text-center">
+          Victory Achieved!
+        </h2>
+        <p className="text-lg text-gray-300 mb-4 text-center">
           Congratulations! You've defeated the boss and earned rewards.
         </p>
-        <p className="text-base text-gray-200 mb-4 text-center">
-          <span className="font-semibold text-yellow-300 text-lg">{coin}</span> coins!
+        <p className="text-lg text-gray-300 mb-4 text-center">
+          <span className="font-semibold text-yellow-400 text-2xl">{coin}</span> coins!
         </p>
-        <p className="text-base text-gray-200 mb-6 text-center">
-          <span className="font-semibold text-blue-300 text-lg">{experience}</span> experience points!
+        <p className="text-lg text-gray-300 mb-6 text-center">
+          <span className="font-semibold text-blue-400 text-2xl">{experience}</span> experience points!
         </p>
         <div className="flex justify-center">
           <button
             onClick={onClose}
-            className="px-4 py-1 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-lg shadow-md hover:from-yellow-400 hover:to-yellow-600 transition duration-300 ease-in-out text-sm"
+            className="px-6 py-2 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-bold rounded-full shadow-lg hover:from-yellow-500 hover:to-yellow-700 transition duration-300 ease-in-out text-md"
           >
-            Great!
+            Awesome!
           </button>
         </div>
       </div>

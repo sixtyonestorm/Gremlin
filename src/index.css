@@ -20,7 +20,7 @@ body::before {
   background-size: cover; /* Ensure the image covers the entire area */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent repeating of the background image */
-  opacity: 0.3; /* Adjust this value to control the opacity of the background image */
+  opacity: 3; /* Adjust this value to control the opacity of the background image */
   z-index: -1; /* Ensure the image is behind the gradient */
 }
 
