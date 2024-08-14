@@ -7,6 +7,7 @@ import usePortalAnimation from './utils/portalAnimation';
 
 interface BossData {
   _id: string;
+  spid: number;
   name: string;
   health: number;
   imageSrc: string;
@@ -15,8 +16,7 @@ interface BossData {
 }
 
 const Boss: React.FC = () => {
-  const [bossDataList, setBossDataList] = useState<BossData[]>([]);
-  const [currentBossIndex, setCurrentBossIndex] = useState(0);
+  const [bossData, setBossData] = useState<BossData | null>(null);
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ damage: 0, coin: 0 });
@@ -29,40 +29,36 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
-    const fetchBosses = async () => {
+    // Fetch boss data from API when component mounts
+    const fetchBoss = async () => {
       try {
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses'); // Adjust the URL as needed
-        setBossDataList(response.data);
-        setCurrentHealth(response.data[0]?.health || 0);
+        const bossId = '66bcd72f4fc9400f4aa0a3e7'; // Example boss ID, replace with actual ID
+        const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/bosses/${bossId}`);
+        setBossData(response.data);
+        setCurrentHealth(response.data.health);
       } catch (error) {
-        console.error('Error fetching bosses:', error);
+        console.error('Error fetching boss data:', error);
       }
     };
 
-    fetchBosses();
+    fetchBoss();
   }, []);
 
   useEffect(() => {
-    if (bossDataList.length > 0) {
-      setCurrentHealth(bossDataList[currentBossIndex].health);
-    }
-  }, [currentBossIndex, bossDataList]);
-
-  useEffect(() => {
-    if (currentHealth <= 0) {
+    if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
-  }, [currentHealth]);
+  }, [currentHealth, bossData]);
 
   const handleClick = () => {
-    if (currentHealth > 0) {
+    if (currentHealth > 0 && bossData) {
       setCurrentHealth(prevHealth => {
         const newHealth = prevHealth - 10;
         if (newHealth <= 0) {
           setCurrentHealth(0);
           setRewardData({
-            damage: bossDataList[currentBossIndex].health,
-            coin: bossDataList[currentBossIndex].coinAmount,
+            damage: bossData.health,
+            coin: bossData.coinAmount,
           });
           setIsPopupVisible(true);
         }
@@ -77,11 +73,7 @@ const Boss: React.FC = () => {
   };
 
   const handleBossDeath = () => {
-    setCurrentBossIndex(prevIndex => {
-      const nextIndex = (prevIndex + 1) % bossDataList.length;
-      setCurrentHealth(bossDataList[nextIndex].health);
-      return nextIndex;
-    });
+    // Handle boss death (e.g., load next boss)
   };
 
   const handlePopupClose = () => {
@@ -90,12 +82,12 @@ const Boss: React.FC = () => {
 
   return (
     <div className="relative flex flex-col items-center p-4">
-      {bossDataList.length > 0 && (
+      {bossData && (
         <>
           <h2 className="text-xl font-semibold mb-2 text-white">
-            {bossDataList[currentBossIndex].name}
+            {bossData.name}
           </h2>
-          <HealthBar hp={currentHealth} maxHp={bossDataList[currentBossIndex].health} />
+          <HealthBar hp={currentHealth} maxHp={bossData.health} />
           <div className="relative flex justify-center items-center">
             <div className="absolute flex items-center justify-center">
               {/* Dış Halka */}
@@ -109,8 +101,8 @@ const Boss: React.FC = () => {
             </div>
 
             <img
-              src={bossDataList[currentBossIndex].imageSrc}
-              alt={`Boss ${bossDataList[currentBossIndex]._id}`}
+              src={bossData.imageSrc}
+              alt={`Boss ${bossData.spid}`}
               width={280}
               height={280}
               className="cursor-pointer boss-image"
