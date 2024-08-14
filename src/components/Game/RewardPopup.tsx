@@ -11,6 +11,22 @@ interface RewardPopupProps {
 const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, experience }) => {
   const popupRef = useRef<HTMLDivElement>(null);
 
+  // List of threatening phrases
+  const titles = [
+    "This is just the beginning; you won’t be so lucky next time!",
+    "Don’t cross my path again, or I’ll make sure you regret it!",
+    "Remember this moment, because the next time will be far more brutal!",
+    "You may have escaped this time, but next time, there’s no way out!",
+    "Get ready, because next time, I won’t hold back!",
+    "Today you got lucky, but next time, nothing will save you!",
+    "Consider this a warning—next time, I’ll finish what I started!",
+    "I’m lurking in the shadows; think twice before you make your next move!",
+    "You can run now, but you can’t hide forever!"
+  ];
+
+  // Randomly select a title
+  const randomTitle = titles[Math.floor(Math.random() * titles.length)];
+
   useEffect(() => {
     if (isVisible && popupRef.current) {
       animatePopup(popupRef.current);
@@ -26,7 +42,7 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
         className="bg-green-900 p-4 rounded-lg border-2 border-yellow-500 max-w-xs w-full"
       >
         <h2 className="text-2xl font-bold text-yellow-400 mb-2 text-center animate-pulse">
-          Level Complete!
+          {randomTitle}
         </h2>
         <p className="text-sm text-gray-300 mb-3 text-center">
           Boss defeated! Claim your rewards:
