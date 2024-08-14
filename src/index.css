@@ -7,9 +7,6 @@ body {
   background-size: 200% 200%;
   animation: gradientShift 20s ease infinite;
   position: relative; /* Ensure the body is positioned relative for absolute positioning of the pseudo-element */
-  margin: 0; /* Remove default margin to ensure full coverage */
-  height: 100vh; /* Make sure body takes the full viewport height */
-  overflow: hidden; /* Hide any overflow to ensure no scrollbars */
 }
 
 body::before {
