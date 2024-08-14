@@ -38,16 +38,16 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
   if (!isVisible) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-40">
+    <div className="fixed inset-0 flex items-center justify-center z-[9999] p-4 bg-gray-900 bg-opacity-50">
       <div
         ref={popupRef}
-        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-4 rounded-lg shadow-lg w-full max-w-xs relative opacity-1"
+        className="bg-gradient-to-br from-green-800 via-green-700 to-black p-3 rounded-lg shadow-lg max-w-xs w-full opacity-1"
       >
-        <h2 className="text-xl font-bold text-yellow-400 mb-2 text-center">
-          Profile Info
+        <h2 className="text-lg font-bold text-yellow-400 mb-2 text-center">
+          Player Stats
         </h2>
         
-        <div className="space-y-2 mb-2 text-sm text-gray-200">
+        <div className="space-y-1 mb-2 text-sm text-gray-200">
           <div className="flex justify-between items-center">
             <span className="font-semibold text-blue-300">Username:</span>
             <span className="text-yellow-300 font-semibold">{userData.username || 'N/A'}</span>
@@ -86,10 +86,10 @@ const ProfilePopup: React.FC<ProfilePopupProps> = ({ isVisible, onClose, userDat
           </div>
         </div>
 
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-2">
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-700 transition duration-300 ease-in-out text-xs"
+            className="px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-black font-semibold rounded-lg shadow-md hover:from-yellow-500 hover:to-yellow-700 transition duration-200 ease-in"
           >
             Close
           </button>
