@@ -20,6 +20,7 @@ const Boss: React.FC = () => {
   const [currentHealth, setCurrentHealth] = useState(0);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [rewardData, setRewardData] = useState({ coin: 0, experience: 0 });
+  const [userAttackPower, setUserAttackPower] = useState(10); // Default attack power
 
   const {
     outerCircleRef,
@@ -49,6 +50,25 @@ const Boss: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Fetch user data from the API
+        const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
+        if (telegramUser) {
+          const UserId = telegramUser.id;
+          const response = await axios.get(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`);
+          const userData = response.data;
+          setUserAttackPower(userData.attack_power);
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  useEffect(() => {
     if (bossData && currentHealth <= 0) {
       handleBossDeath();
     }
@@ -56,8 +76,7 @@ const Boss: React.FC = () => {
 
   const handleClick = () => {
     if (currentHealth > 0 && bossData) {
-      // Calculate damage based on attack_power (This part needs to be implemented)
-      const userAttackPower = 10; // Example attack power, replace with actual value
+      // Calculate damage based on attack_power
       setCurrentHealth(prevHealth => {
         const newHealth = prevHealth - userAttackPower;
         if (newHealth <= 0) {
@@ -80,6 +99,18 @@ const Boss: React.FC = () => {
 
   const handleBossDeath = async () => {
     try {
+      // Update user data with the rewards
+      const telegramUser = window.Telegram.WebApp.initDataUnsafe.user;
+      if (telegramUser) {
+        const UserId = telegramUser.id;
+        await axios.put(`https://greserver-b4a1eced30d9.herokuapp.com/api/user/${UserId}`, {
+          $inc: {
+            mined_boss_coin: rewardData.coin,
+            Experience: rewardData.experience
+          }
+        });
+      }
+
       // Fetch a new random boss from the API
       const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/bosses');
       const bosses: BossData[] = response.data;
@@ -90,7 +121,7 @@ const Boss: React.FC = () => {
         setCurrentHealth(selectedBoss.health);
       }
     } catch (error) {
-      console.error('Error fetching new boss:', error);
+      console.error('Error updating user data or fetching new boss:', error);
     }
   };
 
