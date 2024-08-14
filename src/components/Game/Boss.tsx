@@ -37,13 +37,12 @@ const Boss: React.FC = () => {
   } = usePortalAnimation();
 
   useEffect(() => {
-    const fetchUserId = async () => {
-      try {
-        // Dinamik olarak kullanıcı ID'sini al
-        const response = await axios.get('https://greserver-b4a1eced30d9.herokuapp.com/api/user-id'); // Kullanıcı ID'sini al
-        setUserId(response.data.id);
-      } catch (error) {
-        console.error('Error fetching user ID:', error);
+    // Kullanıcı ID'sini almak için uygun API çağrısı veya yöntem
+    const fetchUserId = () => {
+      // Örneğin: Kullanıcı ID'sini localStorage'dan al
+      const id = localStorage.getItem('userId'); // Örnek
+      if (id) {
+        setUserId(Number(id));
       }
     };
 
