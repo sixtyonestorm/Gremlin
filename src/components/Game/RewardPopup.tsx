@@ -22,9 +22,10 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
   const handleShare = () => {
     const shareUrl = 'https://t.me/share/url';
     const botUrl = 'https://t.me/gremlincombatbot'; // Your bot's URL
-    const text = `Check out my rewards in the Gremlin Combat game! Coins: ${coin}, XP: ${experience}`;
+    const text = `Check out my rewards in the Gremlin Combat game! Coins: ${coin}, XP: ${experience}.`;
+    const imageUrl = 'https://i.ibb.co/d7mtqtm/gremlin2.webp'; // Replace with your image URL
 
-    const shareUrlWithParams = `${shareUrl}?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent(text)}`;
+    const shareUrlWithParams = `${shareUrl}?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent(text)}&media=${encodeURIComponent(imageUrl)}`;
     window.open(shareUrlWithParams, '_blank');
   };
 
@@ -40,6 +41,13 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
         <p className="text-sm text-green-100 mb-3 text-center">
           Boss defeated! Claim your rewards:
         </p>
+        <div className="flex justify-center mb-4">
+          <img
+            src="https://example.com/path/to/reward-image.png" // Replace with your image URL
+            alt="Reward"
+            className="w-full h-auto rounded"
+          />
+        </div>
         <div className="flex justify-between items-center mb-3 bg-green-900 bg-opacity-50 p-2 rounded">
           <span className="text-yellow-300 flex items-center">
             <svg className="w-4 h-4 mr-1 fill-current" viewBox="0 0 20 20">
