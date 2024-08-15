@@ -20,12 +20,12 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
   if (!isVisible) return null;
 
   const handleShare = () => {
-    // Construct the message and URL for sharing
-    const message = `I just defeated the boss and earned ${coin} coins and ${experience} XP! 🎉`;
-    const encodedMessage = encodeURIComponent(message);
-    const shareUrl = `https://t.me/gremlincombatbot?start=${encodedMessage}`;
-    
-    window.open(shareUrl, '_blank');
+    const shareUrl = 'https://t.me/share/url';
+    const botUrl = 'https://t.me/gremlincombatbot'; // Your bot's URL
+    const text = `Check out my rewards in the Gremlin Combat game! Coins: ${coin}, XP: ${experience}`;
+
+    const shareUrlWithParams = `${shareUrl}?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent(text)}`;
+    window.open(shareUrlWithParams, '_blank');
   };
 
   return (
@@ -60,16 +60,16 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
           <span className="font-semibold text-blue-300">+{experience}</span>
         </div>
         <button
-          onClick={onClose}
-          className="w-full py-2 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded hover:from-green-500 hover:to-green-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-2"
-        >
-          Claim Loot!
-        </button>
-        <button
           onClick={handleShare}
-          className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-md"
+          className="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-2"
         >
           Share on Telegram
+        </button>
+        <button
+          onClick={onClose}
+          className="w-full py-2 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded hover:from-green-500 hover:to-green-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-md"
+        >
+          Claim Loot!
         </button>
       </div>
     </div>
