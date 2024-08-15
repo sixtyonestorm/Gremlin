@@ -20,10 +20,12 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
   if (!isVisible) return null;
 
   const handleShare = () => {
-    // Construct the Telegram share URL with your bot
+    // Construct the message and URL for sharing
     const message = `I just defeated the boss and earned ${coin} coins and ${experience} XP! 🎉`;
-    const url = `https://t.me/gremlincombatbot?start=share&text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    const encodedMessage = encodeURIComponent(message);
+    const shareUrl = `https://t.me/gremlincombatbot?start=${encodedMessage}`;
+    
+    window.open(shareUrl, '_blank');
   };
 
   return (
