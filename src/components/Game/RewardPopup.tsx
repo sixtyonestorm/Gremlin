@@ -19,6 +19,12 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
 
   if (!isVisible) return null;
 
+  const handleShare = () => {
+    const message = `I just defeated the boss and earned ${coin} coins and ${experience} XP! 🎉`;
+    const url = `https://t.me/share/url?url=${encodeURIComponent(message)}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[9999] bg-black bg-opacity-70">
       <div
@@ -52,9 +58,15 @@ const RewardPopup: React.FC<RewardPopupProps> = ({ isVisible, onClose, coin, exp
         </div>
         <button
           onClick={onClose}
-          className="w-full py-2 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded hover:from-green-500 hover:to-green-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-md"
+          className="w-full py-2 bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold rounded hover:from-green-500 hover:to-green-400 transition duration-300 ease-in-out transform hover:scale-105 shadow-md mb-2"
         >
           Claim Loot!
+        </button>
+        <button
+          onClick={handleShare}
+          className="w-full py-2 bg-blue-600 text-white font-semibold rounded hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105 shadow-md"
+        >
+          Share on Telegram
         </button>
       </div>
     </div>
