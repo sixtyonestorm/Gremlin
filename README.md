@@ -1,4 +1,5 @@
-# Gremlin Hunter Telegram Mini App (This project is abandoned)
+# Gremlin Hunter Telegram Mini App 
+# (This project is abandoned)
 
 This is a **Telegram Mini App** built with **React, TypeScript, Tailwind CSS, and GSAP**. It features interactive components like **Game, Mining, Profile, Guild, and Dungeon**, providing an engaging experience for users. The app is designed to be highly responsive, visually appealing, and optimized for mobile devices within the Telegram WebApp environment.
 
