@@ -19,6 +19,17 @@ Here is a demo of the app in action:
 
 *Note: This is the frontend part of the project. The backend is not included in this demo.*
 
+## Features
+
+- **Game**: A dynamic game experience for users to enjoy.
+- **Mining**: A system for resource gathering and upgrades.
+- **Profile**: User profile with detailed stats and achievements.
+- **Guild**: A feature to join and interact with guilds.
+- **Dungeon**: A challenging dungeon system for users to explore.
+- Highly responsive and optimized for Telegram WebApp.
+
+*Note: This is the frontend part of the project. The backend is not included in this demo.*
+
 - **User Authentication**: Retrieves and verifies user data via the Telegram WebApp SDK.
 - **Animated Loading Screen**: Utilizes GSAP for smooth and engaging animations.
 - **Dynamic Navigation**: Seamlessly switch between Game, Mining, Profile, Guild, and Dungeon sections.
