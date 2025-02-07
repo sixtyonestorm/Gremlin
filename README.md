@@ -1,50 +1,125 @@
-# React + TypeScript + Vite
+# Gremlin Hunter Telegram Mini App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a **Telegram Mini App** built with **React, TypeScript, Tailwind CSS, and GSAP**. It features interactive components like **Game, Mining, Profile, Guild, and Dungeon**, providing an engaging experience for users. The app is designed to be highly responsive, visually appealing, and optimized for mobile devices within the Telegram WebApp environment.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Authentication**: Retrieves and verifies user data via the Telegram WebApp SDK.
+- **Animated Loading Screen**: Utilizes GSAP for smooth and engaging animations.
+- **Dynamic Navigation**: Seamlessly switch between Game, Mining, Profile, Guild, and Dungeon sections.
+- **State Management**: Uses React hooks and Context API for efficient state management.
+- **Mobile-Friendly UI**: Tailwind CSS ensures a fully responsive experience optimized for all screen sizes.
+- **Interactive Mining System**: Users can engage in mining activities with resource upgrades and passive income mechanics.
+- **Guild System**: Users can form or join guilds to participate in cooperative gameplay.
+- **Boss Hunting**: Engage in battles against powerful bosses to earn rewards.
+- **Referral System**: Invite friends to earn bonuses and track referrals dynamically.
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To set up and run the project locally, follow these steps:
 
-- Configure the top-level `parserOptions` property like this:
+### Prerequisites
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Node.js (>=16.x)
+- npm or yarn
+- Telegram WebApp configured
+
+### Steps
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/gremlin-hunter.git
+   cd gremlin-hunter
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+   or
+   ```sh
+   yarn install
+   ```
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+   or
+   ```sh
+   yarn dev
+   ```
+4. Open the app in Telegram WebApp and start exploring!
+
+## Project Structure
+
+```
+📂 gremlin-hunter
+ ├── 📁 src
+ │   ├── 📁 components   # Reusable UI components
+ │   ├── 📁 pages        # Individual pages for the app
+ │   ├── 📁 assets       # Images, icons, and other assets
+ │   ├── App.tsx        # Main application component
+ │   ├── main.tsx       # Application entry point
+ ├── 📄 package.json    # Dependencies and scripts
+ ├── 📄 tailwind.config.js # Tailwind CSS configuration
+ ├── 📄 tsconfig.json   # TypeScript configuration
+ ├── 📄 README.md       # Documentation
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## API Integration
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+The app communicates with a backend server to send and retrieve user data. The backend is built with **Express.js and MongoDB**, ensuring efficient data handling. Below is an example of how user data is sent to the server:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```ts
+const sendUserData = async (userData: UserData) => {
+  try {
+    const response = await fetch("https://greserver-b4a1eced30d9.herokuapp.com/api/user-data", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error("Failed to send user data");
+    console.log("User data sent successfully");
+  } catch (error) {
+    console.error("Error sending user data:", error);
+  }
+};
 ```
+
+### Endpoints
+
+The backend exposes several endpoints for various functionalities:
+
+- `POST /api/user-data`: Save user details to the database.
+- `GET /api/user/:id`: Fetch user data by ID.
+- `PUT /api/user/:id`: Update user information.
+- `POST /api/invite`: Track and register invited users.
+
+## Deployment
+
+The project is hosted on **Heroku**, but it can be deployed to other cloud platforms like Vercel, AWS, or DigitalOcean. To deploy your own version on Heroku:
+
+```sh
+npm run build
+heroku create your-app-name
+heroku git:remote -a your-app-name
+git push heroku main
+```
+
+## Contribution Guidelines
+
+We welcome contributions to the project! Follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b feature-branch-name`.
+3. Make your changes and commit: `git commit -m "Add new feature"`.
+4. Push to your branch: `git push origin feature-branch-name`.
+5. Open a **Pull Request** for review.
+
+## License
+
+This project is licensed under the **MIT License**, allowing for open-source use and modification.
+
+---
+
+Made with ❤️ by **S.O.S.**
+
