@@ -98,7 +98,7 @@ The app communicates with a backend server to send and retrieve user data. The b
 ```ts
 const sendUserData = async (userData: UserData) => {
   try {
-    const response = await fetch("https://greserver-b4a1eced30d9.herokuapp.com/api/user-data", {
+    const response = await fetch("https://XXX.herokuapp.com/api/user-data", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userData),
