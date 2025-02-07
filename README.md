@@ -6,7 +6,7 @@ This is a **Telegram Mini App** built with **React, TypeScript, Tailwind CSS, an
 
 Here is a demo of the app in action:
 
-![Demo GIF](https://i.postimg.cc/DZVLSvbz/0207.gif)
+![GIF Açıklaması](https://github.com/sixtyonestorm/grmfront/blob/master/0207.gif)
 
 ## Features
 
