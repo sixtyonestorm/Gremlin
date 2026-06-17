@@ -137,5 +137,5 @@ This project is licensed under the **MIT License**, allowing for open-source use
 
 ---
 
-Made with ❤️ by **S.O.S.**
+Made with by **LRS**
 
